@@ -1206,12 +1206,21 @@ function renderS06(d) {
       <div class="s06-summary-stats">${stats}</div>
     </div>
     ${groupsHTML}
-    <!-- 线索收集：在结果页底部引导留资 -->
+    <!-- 线索收集：在结果页底部留资 -->
     <div class="card" style="margin-top:16px;background:linear-gradient(135deg,#EEF2FF,#fff);">
       <div class="typo-label" style="margin-bottom:4px;">📞 想获取更精准的报考建议？</div>
-      <div class="typo-caption" style="margin-bottom:10px;">扫码进群，李老师一对一为你分析</div>
-      <div style="text-align:center;padding:12px 0;">
-        <img src="/qrcode.jpg" style="width:200px;height:200px;border-radius:8px;border:1px solid #eee;" alt="扫码进群">
+      <div class="typo-caption" style="margin-bottom:10px;">留下联系方式，李老师拉你进群一对一指导</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <input class="form-input" type="text" placeholder="学生姓名" id="resultName" style="height:40px;font-size:13px;">
+        <div style="display:flex;gap:8px;">
+          <input class="form-input" type="tel" placeholder="手机号（必填）" id="resultPhone" style="flex:1;height:40px;font-size:13px;">
+          <button class="btn btn-accent" style="width:auto;padding:0 16px;height:40px;font-size:13px;" onclick="quickSubmitContact()">提交</button>
+        </div>
+        <div style="font-size:11px;color:#999;text-align:center;" id="resultAutoScore"></div>
+      </div>
+      <div class="typo-caption" style="margin-top:4px;font-size:11px;" id="resultContactStatus"></div>
+      <div style="text-align:center;padding:8px 0;">
+        <img src="/qrcode.jpg" style="width:200px;height:200px;border-radius:8px;border:1px solid #eee;" alt="扫码进群" onerror="this.style.display='none'">
         <div style="font-size:12px;color:#666;margin-top:6px;">👆 长按识别二维码 · 文杰教育 李老师</div>
       </div>
     </div>
@@ -1296,8 +1305,9 @@ function renderS09(d) {
 
   // 已保存的联系方式回填
   const savedPhone = localStorage.getItem('zk_phone') || '';
-  const savedWechat = localStorage.getItem('zk_wechat') || '';
   const savedName = localStorage.getItem('zk_name') || '';
+  const savedScore = localStorage.getItem('zk_last_score') || '';
+  const savedRank = localStorage.getItem('zk_last_rank') || '';
 
   return `<div style="padding-top:12px;">
       <div class="typo-h2" style="margin-bottom:20px;">我的</div>
@@ -1312,9 +1322,24 @@ function renderS09(d) {
     <!-- 联系方式收集 -->
     <div class="card" style="margin-bottom:16px;">
       <div class="typo-label" style="margin-bottom:8px;">📞 文杰教育 · 中考咨询</div>
-      <div class="typo-caption" style="margin-bottom:12px;">扫码进群，李老师一对一为你分析</div>
+      <div class="typo-caption" style="margin-bottom:12px;">留下联系方式，李老师拉你进群一对一指导</div>
+      <div class="form-group">
+        <input class="form-input" type="text" placeholder="学生姓名（必填）" id="contactName" value="${savedName}">
+      </div>
+      <div class="form-group">
+        <input class="form-input" type="tel" placeholder="手机号（必填）" id="contactPhone" value="${savedPhone}">
+      </div>
+      <div class="form-group">
+        <input class="form-input" type="text" placeholder="初中学校（选填）" id="contactSchool">
+      </div>
+      <div class="form-row" style="gap:8px;">
+        <input class="form-input" type="number" placeholder="中考分数${savedScore ? '：'+savedScore : ''}" id="contactScore" style="flex:1;">
+        <input class="form-input" type="number" placeholder="区排名${savedRank ? '：'+savedRank : ''}" id="contactRank" style="flex:1;">
+      </div>
+      <button class="btn btn-accent" onclick="submitContact()">提交，进群咨询</button>
+      <div class="typo-caption" style="margin-top:8px;text-align:center;" id="contactStatus"></div>
       <div style="text-align:center;padding:8px 0;">
-        <img src="/qrcode.jpg" style="width:200px;height:200px;border-radius:8px;border:1px solid #eee;" alt="扫码进群">
+        <img src="/qrcode.jpg" style="width:200px;height:200px;border-radius:8px;border:1px solid #eee;" alt="扫码进群" onerror="this.style.display='none'">
         <div style="font-size:12px;color:#666;margin-top:6px;">👆 长按识别 · 文杰教育 李老师</div>
       </div>
     </div>
@@ -1324,6 +1349,7 @@ function renderS09(d) {
 
 // ===== 提交联系方式（结果页快捷版） =====
 function quickSubmitContact() {
+  const name = document.getElementById('resultName')?.value?.trim() || '';
   const phone = document.getElementById('resultPhone')?.value?.trim();
   const status = document.getElementById('resultContactStatus');
   if (!phone || phone.length < 11) {
@@ -1331,56 +1357,54 @@ function quickSubmitContact() {
     status.style.color = 'var(--danger)';
     return;
   }
-  localStorage.setItem('zk_phone', phone);
-  const data = { name: '', phone, wechat: '', score: 0, source: '文杰教育', page_source: '查询结果页' };
-  fetch('/api/contact', {
+  status.textContent = '提交中...';
+  status.style.color = '#666';
+  const scr = window.zkLastScore || parseInt(localStorage.getItem('zk_last_score')) || 0;
+  const rnk = window.zkLastRank || parseInt(localStorage.getItem('zk_last_rank')) || 0;
+  fetch('https://formspree.io/f/xaqgyqko', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  }).catch(() => {});
-  status.innerHTML = '✅ 已提交！<br>长按识别下方二维码进群，李老师在群里等你';
-  status.style.color = 'var(--success)';
-  status.style.fontSize = '13px';
-  status.style.lineHeight = '1.6';
-  // 显示二维码
-  const qrDiv = document.getElementById('resultQrCode');
-  if (qrDiv) qrDiv.style.display = 'block';
-  const cp = document.getElementById('contactPhone');
-  if (cp) cp.value = phone;
+    body: JSON.stringify({ name, phone, score: scr, rank: rnk, source: '结果页' })
+  }).then(() => {
+    status.innerHTML = '✅ 已提交！<br>长按识别下方二维码进群，李老师在群里等你';
+    status.style.color = 'var(--success)';
+  }).catch(() => {
+    status.innerHTML = '✅ 已提交！<br>长按识别下方二维码进群，李老师在群里等你';
+    status.style.color = 'var(--success)';
+  });
+}
+
+// ===== 提交后显示已查询的分数 =====
+function showResultScoreHint() {
+  const el = document.getElementById('resultAutoScore');
+  if (!el) return;
+  const scr = window.zkLastScore || parseInt(localStorage.getItem('zk_last_score')) || 0;
+  if (scr) el.textContent = '已记录你的查询分数：' + scr + '分';
 }
 
 // ===== 提交联系方式（我的页完整版） =====
 function submitContact() {
   const name = document.getElementById('contactName')?.value?.trim();
   const phone = document.getElementById('contactPhone')?.value?.trim();
-  const wechat = document.getElementById('contactWechat')?.value?.trim();
+  const school = document.getElementById('contactSchool')?.value?.trim() || '';
+  const score = document.getElementById('contactScore')?.value?.trim() || '';
+  const rank = document.getElementById('contactRank')?.value?.trim() || '';
   const status = document.getElementById('contactStatus');
-
   if (!name) { status.textContent = '请输入学生姓名'; status.style.color = 'var(--danger)'; return; }
   if (!phone || phone.length < 11) { status.textContent = '请输入正确的手机号'; status.style.color = 'var(--danger)'; return; }
-
-  // 保存到本地
-  localStorage.setItem('zk_name', name);
-  localStorage.setItem('zk_phone', phone);
-  if (wechat) localStorage.setItem('zk_wechat', wechat);
-
-  // 发送到后端
-  const scoreEl = document.getElementById('totalScore');
-  const score = scoreEl ? parseInt(scoreEl.value) || 0 : 0;
-  const data = { name, phone, wechat, score, source: '文杰教育', page_source: '我的页-咨询表单' };
-  fetch('/api/contact', {
+  status.textContent = '提交中...';
+  status.style.color = '#666';
+  fetch('https://formspree.io/f/xaqgyqko', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  }).catch(() => {});
-
-  status.innerHTML = '✅ 提交成功！<br>长按识别下方二维码进群，李老师在群里等你';
-  status.style.color = 'var(--success)';
-  status.style.fontSize = '13px';
-  status.style.lineHeight = '1.6';
-  const qrDiv = document.getElementById('contactQrCode');
-  if (qrDiv) qrDiv.style.display = 'block';
-  showToast('已提交，扫码进群 ✓');
+    body: JSON.stringify({ name, phone, school, score, rank, source: '我的页' })
+  }).then(() => {
+    status.innerHTML = '✅ 已提交！<br>长按识别下方二维码进群，李老师在群里等你';
+    status.style.color = 'var(--success)';
+  }).catch(() => {
+    status.innerHTML = '✅ 已提交！<br>长按识别下方二维码进群，李老师在群里等你';
+    status.style.color = 'var(--success)';
+  });
 }
 
 // ===== Utility: find school detail by index =====
@@ -1651,7 +1675,10 @@ async function startGenerating() {
   const rank    = rankEl  ? parseInt(rankEl.value) || 0 : 0;
 
   // 2. 保存分数到本地
-  localStorage.setItem('zk_last_score', String(score));
+    localStorage.setItem('zk_last_score', String(score));
+    localStorage.setItem('zk_last_rank', String(rank));
+    window.zkLastScore = score;
+    window.zkLastRank = rank;
 
   // 2. 跳到 S05 动画页
   navigateTo(4);
@@ -1775,8 +1802,9 @@ function playAnimCycle2(matchPromise) {
         if (allScreens) {
           const oldS06 = document.getElementById('s06');
           if (oldS06) {
-            oldS06.innerHTML = renderScreen('s06', APP_DATA);
-          }
+              oldS06.innerHTML = renderScreen('s06', APP_DATA);
+              setTimeout(showResultScoreHint, 100);
+            }
         }
       }
       navigateTo(5);
