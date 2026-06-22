@@ -1,0 +1,2104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>宣城中考志愿通 - 宣州区高中录取查询</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ===== CSS Reset & Variables ===== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --primary: #4F46E5;
+  --primary-dark: #4338CA;
+  --primary-light: #EEF2FF;
+  --accent: #EA580C;
+  --accent-dark: #C2410C;
+  --bg: #EEF2FF;
+  --card: #FFFFFF;
+  --text-primary: #1E1B4B;
+  --text-secondary: #64748B;
+  --text-muted: #94A3B8;
+  --border: #C7D2FE;
+  --border-light: #E2E8F0;
+  --success: #10B981;
+  --success-light: #D1FAE5;
+  --warning: #F59E0B;
+  --warning-light: #FEF3C7;
+  --danger: #EF4444;
+  --danger-light: #FEE2E2;
+  --tag-985: #DC2626;
+  --tag-211: #2563EB;
+  --tag-double-first: #7C3AED;
+  --tag-public: #059669;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-pill: 100px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.10);
+  --font: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+html, body {
+  margin: 0; padding: 0;
+  width: 100%;
+  -webkit-overflow-scrolling: touch;
+}
+
+body {
+  font-family: var(--font);
+  background: #e8ecf0;
+}
+
+/* ===== Phone Frame ===== */
+.phone-frame {
+  width: 100%; max-width: 500px;
+  min-height: 100vh; min-height: 100dvh;
+  background: var(--bg);
+  overflow: visible;
+  position: relative;
+  margin: 0 auto;
+  padding-bottom: 64px;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 501px) {
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    background: #333;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .phone-frame {
+    height: 100vh; max-height: 900px;
+    overflow: hidden;
+    padding-bottom: 0;
+  }
+}
+
+/* ===== Screen Container ===== */
+.screens-container {
+  flex: 1;
+  position: relative; width: 100%;
+  min-height: 300px;
+}
+@media (min-width: 501px) {
+  .screens-container { overflow: hidden; }
+}
+.screen {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  overflow-y: auto; overflow-x: hidden;
+  padding: 0 16px 20px;
+  opacity: 0; transform: translateX(40px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  pointer-events: none;
+  -webkit-overflow-scrolling: touch;
+}
+.screen.active {
+  opacity: 1; transform: translateX(0); pointer-events: auto; z-index: 2;
+}
+.screen.exit-left { opacity: 0; transform: translateX(-40px); }
+.screen.exit-right { opacity: 0; transform: translateX(40px); }
+.screen::-webkit-scrollbar { width: 0; }
+
+/* ===== Tab Bar ===== */
+.tab-bar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  max-width: 500px;
+  margin: 0 auto;
+  height: 56px; background: var(--card);
+  display: flex; align-items: center; justify-content: space-around;
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.08); z-index: 50;
+}
+.tab-item {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  cursor: pointer; padding: 6px 12px; transition: all 0.2s;
+  font-size: 10px; color: var(--text-muted); font-weight: 500;
+}
+.tab-item .tab-icon { font-size: 20px; line-height: 1; }
+.tab-item.active { color: var(--primary); }
+.tab-item.active .tab-icon { transform: scale(1.1); }
+
+/* ===== Typography ===== */
+.typo-h1 { font-size: 22px; font-weight: 700; color: var(--text-primary); }
+.typo-h2 { font-size: 18px; font-weight: 700; color: var(--text-primary); }
+.typo-h3 { font-size: 15px; font-weight: 700; color: var(--text-primary); }
+.typo-body { font-size: 14px; font-weight: 400; color: var(--text-secondary); line-height: 1.5; }
+.typo-caption { font-size: 12px; font-weight: 400; color: var(--text-muted); }
+.typo-label { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+
+/* ===== Cards ===== */
+.card {
+  background: var(--card); border-radius: var(--radius-lg);
+  padding: 20px; box-shadow: var(--shadow-sm);
+}
+.card-purple {
+  background: linear-gradient(135deg, var(--primary), #6366F1);
+  color: #fff; border-radius: var(--radius-lg); padding: 20px;
+}
+.card-purple .typo-h2, .card-purple .typo-h3, .card-purple .typo-body,
+.card-purple .typo-caption { color: rgba(255,255,255,0.9); }
+
+/* ===== Buttons ===== */
+.btn { display: inline-flex; align-items: center; justify-content: center;
+  border: none; cursor: pointer; font-family: var(--font); font-weight: 600;
+  transition: all 0.2s; border-radius: var(--radius-md); font-size: 14px; }
+.btn:active { transform: scale(0.97); }
+.btn-primary { background: var(--primary); color: #fff; padding: 14px 28px; width: 100%; }
+.btn-primary:hover { background: var(--primary-dark); }
+.btn-accent { background: var(--accent); color: #fff; padding: 14px 28px; width: 100%; }
+.btn-accent:hover { background: var(--accent-dark); }
+.btn-outline { background: var(--card); color: var(--primary); border: 1.5px solid var(--border);
+  padding: 12px 20px; width: 100%; }
+.btn-sm { padding: 8px 16px; font-size: 12px; border-radius: var(--radius-sm); }
+
+/* ===== Chips ===== */
+.chip {
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 32px; padding: 0 12px; border-radius: var(--radius-pill);
+  font-size: 12px; font-weight: 500; cursor: pointer;
+  transition: all 0.2s; white-space: nowrap; font-family: var(--font);
+  background: var(--card); border: 1.5px solid var(--border);
+  color: var(--text-secondary); user-select: none;
+}
+.chip:active { transform: scale(0.95); }
+.chip.selected {
+  background: var(--primary); border-color: var(--primary); color: #fff;
+  font-weight: 600; box-shadow: 0 2px 8px rgba(79,70,229,0.25);
+}
+.chip.disabled {
+  opacity: 0.35; cursor: not-allowed; pointer-events: none;
+  background: #F1F5F9; border-color: #E2E8F0; color: #CBD5E1;
+}
+.chip-outline {
+  background: var(--primary-light); border-color: var(--border); color: var(--primary);
+}
+.chip-group { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* ===== Form Elements ===== */
+.form-group { margin-bottom: 16px; }
+.form-label { display: block; font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; }
+.form-input {
+  width: 100%; height: 46px; padding: 0 14px; border-radius: var(--radius-md);
+  border: 1.5px solid var(--border-light); font-size: 14px; font-family: var(--font);
+  color: var(--text-primary); background: var(--card); outline: none;
+  transition: border-color 0.2s;
+}
+.form-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79,70,229,0.1); }
+.form-input::placeholder { color: var(--text-muted); }
+/* Hide number input spinner arrows */
+.form-input[type="number"]::-webkit-inner-spin-button,
+.form-input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.form-input[type="number"] { -moz-appearance: textfield; }
+.form-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%2394A3B8' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-position: right 14px center; background-repeat: no-repeat; padding-right: 36px; }
+.form-hint { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+.form-hint-success { color: var(--success); }
+
+/* ===== Screen-specific Styles ===== */
+.s01-hero { display: flex; flex-direction: column; align-items: center; padding: 40px 0 24px; }
+.s01-logo { width: 64px; height: 64px; border-radius: var(--radius-lg); background: var(--primary);
+  display: flex; align-items: center; justify-content: center; margin-bottom: 16px;
+  box-shadow: 0 4px 16px rgba(79,70,229,0.3); }
+.s01-logo span { font-size: 32px; font-weight: 700; color: #fff; }
+.s01-title { font-size: 28px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+.s01-subtitle { font-size: 13px; color: var(--text-secondary); margin-bottom: 24px; }
+.s01-feature-card {
+  display: flex; align-items: flex-start; gap: 12px;
+  background: var(--card); border-radius: var(--radius-md); padding: 16px;
+  margin-bottom: 10px; box-shadow: var(--shadow-sm);
+  cursor: pointer; transition: all 0.2s;
+}
+.s01-feature-card:active { transform: scale(0.98); }
+.s01-feature-icon { font-size: 24px; width: 44px; height: 44px; border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.s01-feature-icon.purple { background: var(--primary-light); }
+.s01-feature-icon.orange { background: #FFF7ED; }
+.s01-feature-icon.green { background: var(--success-light); }
+.s01-feature-icon.blue { background: #EFF6FF; }
+.s01-feature-title { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 2px; }
+.s01-feature-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.4; }
+
+/* Screen 02 - 04 Header */
+.s2-header { display: flex; align-items: center; gap: 12px; padding: 12px 0 16px; }
+.s2-back { width: 32px; height: 32px; border-radius: 50%; background: var(--card);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 18px; color: var(--text-secondary); }
+.s2-back:active { background: var(--border-light); }
+.progress-bar { display: flex; align-items: center; gap: 6px; flex: 1; }
+.progress-step { width: 32px; height: 4px; border-radius: 2px; background: var(--border-light); transition: all 0.3s; }
+.progress-step.done { background: var(--primary); }
+.progress-step.current { background: var(--primary); width: 48px; }
+.s2-title { font-size: 15px; font-weight: 700; color: var(--text-primary); margin-bottom: 16px; }
+
+.s02-auto-tag {
+  display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: var(--radius-pill);
+  background: var(--primary-light); color: var(--primary); font-weight: 500; margin-top: 6px;
+}
+
+.s04-priority-card {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px; border-radius: var(--radius-md);
+  background: var(--card); border: 1.5px solid var(--border-light);
+  cursor: pointer; transition: all 0.2s; margin-bottom: 8px;
+}
+.s04-priority-card:active { transform: scale(0.98); }
+.s04-priority-card.selected {
+  background: var(--primary-light); border-color: var(--primary);
+  box-shadow: 0 2px 8px rgba(79,70,229,0.12);
+}
+.s04-priority-icon { font-size: 22px; width: 40px; text-align: center; flex-shrink: 0; }
+.s04-priority-title { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+.s04-priority-card.selected .s04-priority-title { color: var(--primary); }
+.s04-section-title { font-size: 14px; font-weight: 700; color: var(--text-primary); margin: 16px 0 8px; }
+
+/* Screen 05 */
+.s05-content { display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding-top: 80px; text-align: center; }
+.s05-icon { width: 80px; height: 80px; border-radius: 50%; background: var(--primary-light);
+  display: flex; align-items: center; justify-content: center; margin-bottom: 24px;
+  animation: pulse 2s ease-in-out infinite; }
+@keyframes pulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(79,70,229,0.3); }
+  50% { transform: scale(1.05); box-shadow: 0 0 0 16px rgba(79,70,229,0); }
+}
+.s05-spinner { font-size: 36px; animation: spin 2s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.s05-title { font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; }
+.s05-subtitle { font-size: 13px; color: var(--text-secondary); margin-bottom: 32px; max-width: 280px; line-height: 1.5; }
+.s05-step-list { width: 100%; max-width: 280px; }
+.s05-step { display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px; border-radius: var(--radius-md); margin-bottom: 8px; }
+.s05-step-dot { font-size: 14px; flex-shrink: 0; }
+.s05-step-text { font-size: 13px; color: var(--text-secondary); }
+.s05-step.done .s05-step-text { color: var(--success); font-weight: 500; }
+.s05-step.doing .s05-step-text { color: var(--primary); font-weight: 500; }
+.s05-step.pending .s05-step-text { color: var(--text-muted); }
+
+/* Screen 06 */
+.s06-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 0 16px; }
+.s06-share { font-size: 13px; color: var(--primary); cursor: pointer; font-weight: 600; }
+.s06-summary { margin-bottom: 16px; }
+.s06-summary-stats { display: flex; gap: 20px; margin-top: 12px; }
+.s06-stat { text-align: center; }
+.s06-stat-val { font-size: 18px; font-weight: 700; }
+.s06-stat-label { font-size: 11px; opacity: 0.8; margin-top: 2px; }
+.s06-group-title { font-size: 14px; font-weight: 700; color: var(--text-primary);
+  display: flex; align-items: center; gap: 8px; margin: 16px 0 8px; }
+.s06-group-badge { font-size: 11px; padding: 2px 8px; border-radius: var(--radius-pill); font-weight: 500; }
+.s06-group-badge.rush { background: #FEF3C7; color: #B45309; }
+.s06-group-badge.stable { background: #DBEAFE; color: #1D4ED8; }
+.s06-group-badge.safe { background: #D1FAE5; color: #059669; }
+.s06-school-card {
+  display: flex; align-items: center; gap: 12px; padding: 14px;
+  background: var(--card); border-radius: var(--radius-md);
+  margin-bottom: 8px; box-shadow: var(--shadow-sm); cursor: pointer;
+  transition: all 0.2s;
+}
+.s06-school-card:active { transform: scale(0.98); }
+.s06-school-rank { width: 40px; height: 40px; border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; flex-shrink: 0; }
+.s06-school-rank.rush { background: #FEF3C7; color: #B45309; }
+.s06-school-rank.stable { background: #DBEAFE; color: #1D4ED8; }
+.s06-school-rank.safe { background: #D1FAE5; color: #059669; }
+.s06-school-info { flex: 1; min-width: 0; }
+.s06-school-name { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+.s06-school-major { font-size: 12px; color: var(--text-secondary); }
+.s06-school-loc { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.s06-school-tags { display: flex; gap: 4px; margin-top: 4px; }
+.s06-tag { font-size: 10px; padding: 1px 6px; border-radius: var(--radius-pill); font-weight: 500; }
+.s06-tag-985 { background: #FEE2E2; color: #DC2626; }
+.s06-tag-211 { background: #DBEAFE; color: #2563EB; }
+.s06-school-rate { text-align: right; flex-shrink: 0; }
+.s06-rate-val { font-size: 18px; font-weight: 700; color: var(--primary); }
+.s06-rate-label { font-size: 11px; color: var(--text-muted); }
+
+/* Screen 07 */
+.s07-header { display: flex; align-items: center; gap: 12px; padding: 12px 0 16px; }
+.s07-back-btn { width: 32px; height: 32px; border-radius: 50%; background: var(--card);
+  display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 18px;
+  color: var(--text-secondary); }
+.s07-title-header { font-size: 16px; font-weight: 600; color: var(--text-primary); }
+.s07-rate-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; padding: 4px 10px;
+  border-radius: var(--radius-pill); background: var(--warning-light); color: #B45309; font-weight: 600; }
+.s07-school-header { margin-bottom: 16px; }
+.s07-school-name-lg { font-size: 20px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; }
+.s07-major-name { font-size: 15px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; }
+.s07-tuition { font-size: 12px; color: var(--text-muted); }
+.s07-reason-section { margin-top: 16px; }
+.s07-reason-card { padding: 14px; border-radius: var(--radius-md); margin-bottom: 10px;
+  border-left: 3px solid var(--primary); }
+.s07-reason-card.score { background: #EEF2FF; border-color: var(--primary); }
+.s07-reason-card.match { background: #ECFDF5; border-color: var(--success); }
+.s07-reason-card.trend { background: #FEFCE8; border-color: var(--warning); }
+.s07-reason-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+.s07-reason-card.score .s07-reason-title { color: var(--primary); }
+.s07-reason-card.match .s07-reason-title { color: var(--success); }
+.s07-reason-card.trend .s07-reason-title { color: #B45309; }
+.s07-reason-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+.s07-warning { display: flex; align-items: flex-start; gap: 8px; padding: 12px;
+  background: var(--danger-light); border-radius: var(--radius-md); margin-top: 12px; }
+.s07-warning-icon { font-size: 16px; flex-shrink: 0; }
+.s07-warning-text { font-size: 12px; color: #B91C1C; line-height: 1.5; }
+.s07-actions { display: flex; gap: 10px; margin-top: 16px; }
+
+/* Screen 08 */
+.s08-search { position: relative; margin-bottom: 16px; }
+.s08-search input { padding-left: 38px; }
+.s08-search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+  font-size: 16px; color: var(--text-muted); pointer-events: none; }
+.s08-filters { margin-bottom: 16px; }
+.s08-school-list-item { display: flex; align-items: center; gap: 12px;
+  padding: 14px; background: var(--card); border-radius: var(--radius-md);
+  margin-bottom: 8px; box-shadow: var(--shadow-sm); cursor: pointer; }
+.s08-school-list-item:active { transform: scale(0.98); }
+.s08-school-arrow { color: var(--text-muted); font-size: 14px; flex-shrink: 0; }
+
+/* Screen 09 */
+.s09-profile { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; }
+.s09-avatar { width: 56px; height: 56px; border-radius: 50%; background: var(--primary);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; font-weight: 700; color: #fff; }
+.s09-user-name { font-size: 17px; font-weight: 700; color: var(--text-primary); }
+.s09-user-detail { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+.s09-menu-item { display: flex; align-items: center; gap: 12px; padding: 16px;
+  background: var(--card); border-radius: var(--radius-md); margin-bottom: 8px;
+  box-shadow: var(--shadow-sm); cursor: pointer; transition: all 0.2s; }
+.s09-menu-item:active { transform: scale(0.98); }
+.s09-menu-icon { font-size: 20px; width: 36px; text-align: center; flex-shrink: 0; }
+.s09-menu-label { flex: 1; font-size: 14px; font-weight: 500; color: var(--text-primary); }
+.s09-menu-badge { font-size: 12px; padding: 2px 8px; border-radius: var(--radius-pill);
+  background: var(--primary-light); color: var(--primary); font-weight: 600; }
+.s09-menu-arrow { color: var(--text-muted); font-size: 14px; }
+
+/* ===== Loading & Error States ===== */
+.loading-overlay { position: absolute; inset: 0; background: var(--bg);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 200; }
+.loading-spinner { width: 40px; height: 40px; border: 3px solid var(--border-light);
+  border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+.loading-text { margin-top: 16px; font-size: 14px; color: var(--text-secondary); }
+.error-overlay { position: absolute; inset: 0; background: var(--bg);
+  display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 200; }
+.error-text { font-size: 14px; color: var(--danger); margin-bottom: 16px; }
+.error-retry { padding: 10px 24px; background: var(--primary); color: #fff; border: none;
+  border-radius: var(--radius-md); cursor: pointer; font-family: var(--font); font-size: 14px; }
+
+/* ===== Animation ===== */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-in { animation: fadeInUp 0.4s ease both; }
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+/* ===== Ripple Effect ===== */
+.ripple-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  transform: scale(0);
+  animation: ripple-animation 0.6s ease-out;
+  pointer-events: none;
+}
+
+@keyframes ripple-animation {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* ===== Enhanced Button Effects ===== */
+.btn {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn:active {
+  transform: scale(0.95);
+  transition: transform 0.1s;
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
+  transform: translateY(-2px);
+}
+
+.btn-primary:active {
+  transform: scale(0.95) translateY(0);
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+}
+
+.btn-accent:hover {
+  background: var(--accent-dark);
+  box-shadow: 0 6px 20px rgba(234, 88, 12, 0.4);
+  transform: translateY(-2px);
+}
+
+.btn-accent:active {
+  transform: scale(0.95) translateY(0);
+  box-shadow: 0 2px 8px rgba(234, 88, 12, 0.3);
+}
+
+/* ===== Card Hover Effects ===== */
+.card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+}
+
+.s01-feature-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.s01-feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.s01-feature-card:active {
+  transform: scale(0.98) translateY(0);
+}
+
+.s06-school-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.s06-school-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.s06-school-card:active {
+  transform: scale(0.98);
+}
+
+.s08-school-list-item {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.s08-school-list-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.s08-school-list-item:active {
+  transform: scale(0.98);
+}
+
+.s09-menu-item {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.s09-menu-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.s09-menu-item:active {
+  transform: scale(0.98);
+}
+
+/* ===== Chip Effects ===== */
+.chip {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.chip:hover:not(.disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.chip.selected {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+}
+
+.chip.selected:hover {
+  box-shadow: 0 6px 16px rgba(79, 70, 229, 0.4);
+  transform: translateY(-2px);
+}
+
+/* ===== Tab Item Effects ===== */
+.tab-item {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.tab-item:hover {
+  transform: translateY(-2px);
+}
+
+.tab-item:active {
+  transform: scale(0.9);
+}
+
+.tab-item.active {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ===== Back Button Effects ===== */
+.s2-back, .s07-back-btn {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.s2-back:hover, .s07-back-btn:hover {
+  background: var(--border-light);
+  transform: scale(1.1);
+}
+
+.s2-back:active, .s07-back-btn:active {
+  transform: scale(0.9);
+}
+
+/* ===== Priority Card Effects ===== */
+.s04-priority-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.s04-priority-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.s04-priority-card.selected {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.s04-priority-card:active {
+  transform: scale(0.98);
+}
+
+/* ===== Toast Animation Enhancement ===== */
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+}
+
+@keyframes toast-out {
+  from {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px) scale(0.9);
+  }
+}
+
+/* ===== Screen Transition Enhancement ===== */
+.screen {
+  transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.screen.active {
+  animation: screen-enter 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes screen-enter {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ===== Loading Spinner Enhancement ===== */
+.loading-spinner {
+  animation: spin 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* ===== Auth Button Effects ===== */
+.auth-btn {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-btn:hover:not(:disabled) {
+  background: var(--primary-dark);
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
+  transform: translateY(-2px);
+}
+
+.auth-btn:active:not(:disabled) {
+  transform: scale(0.95) translateY(0);
+}
+
+.auth-tab {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.auth-tab:hover {
+  color: var(--primary);
+}
+
+/* ===== Form Input Focus Effects ===== */
+.form-input {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.form-input:focus {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.15);
+}
+
+/* ===== S05 Icon Pulse Enhancement ===== */
+.s05-icon {
+  animation: pulse 2s ease-in-out infinite, icon-bounce 2s ease-in-out infinite;
+}
+
+@keyframes icon-bounce {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05) translateY(-5px);
+  }
+}
+
+/* ===== Share Button Effects ===== */
+.s06-share {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.s06-share:hover {
+  transform: scale(1.05);
+}
+
+.s06-share:active {
+  transform: scale(0.95);
+}
+
+/* ===== Link Text Effects ===== */
+.link-text {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.link-text:hover {
+  transform: translateX(2px);
+}
+
+/* ===== Progress Step Animation ===== */
+.progress-step {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.progress-step.done {
+  animation: progress-done 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes progress-done {
+  from {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+/* ===== S07 Action Button Effects ===== */
+.s07-actions .btn {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.s07-actions .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.s07-actions .btn:active {
+  transform: scale(0.95);
+}
+.link-text { font-size: 12px; color: var(--primary); cursor: pointer; font-weight: 500; }
+.link-text:hover { text-decoration: underline; }
+
+/* ===== 登录 / 注册页 ===== */
+.auth-overlay {
+  display: none; position: fixed; inset: 0; z-index: 9999;
+  background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+  justify-content: center; align-items: center; flex-direction: column;
+  padding: 20px;
+}
+.auth-overlay.show { display: flex; }
+.auth-card {
+  background: #fff; border-radius: 20px; padding: 32px 28px 28px;
+  width: 100%; max-width: 380px; box-shadow: 0 20px 60px rgba(0,0,0,.25);
+  animation: fadeInUp .5s ease both;
+}
+.auth-logo { text-align: center; margin-bottom: 20px; }
+.auth-logo .icon { font-size: 44px; }
+.auth-logo .title { font-size: 22px; font-weight: 700; color: var(--text-primary); margin-top: 4px; }
+.auth-logo .sub { font-size: 12px; color: #888; margin-top: 2px; }
+.auth-tabs { display: flex; gap: 0; margin-bottom: 24px; border-radius: 10px; background: #F3F4F6; padding: 3px; }
+.auth-tab {
+  flex: 1; text-align: center; padding: 9px 0; border-radius: 8px;
+  font-size: 14px; font-weight: 600; cursor: pointer; color: #888; transition: .2s;
+  border: none; background: transparent;
+}
+.auth-tab.active { background: #fff; color: var(--primary); box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+.auth-field { margin-bottom: 14px; }
+.auth-field label { display: block; font-size: 12px; font-weight: 600; color: #555; margin-bottom: 4px; }
+.auth-field input {
+  width: 100%; padding: 11px 14px; border: 1.5px solid #E5E7EB; border-radius: 10px;
+  font-size: 14px; outline: none; transition: .2s; background: #F9FAFB;
+}
+.auth-field input:focus { border-color: var(--primary); background: #fff; }
+.auth-btn {
+  width: 100%; padding: 12px; border: none; border-radius: 10px;
+  background: var(--primary); color: #fff; font-size: 15px; font-weight: 600;
+  cursor: pointer; transition: .2s; margin-top: 4px;
+}
+.auth-btn:hover { background: var(--primary-dark); }
+.auth-btn:disabled { opacity: .5; cursor: not-allowed; }
+.auth-error { color: #DC2626; font-size: 12px; text-align: center; margin-top: 8px; min-height: 18px; }
+.auth-extra { text-align: center; margin-top: 12px; font-size: 12px; color: #999; }
+.auth-extra span { color: var(--primary); cursor: pointer; font-weight: 500; }
+.auth-extra span:hover { text-decoration: underline; }
+</style>
+<script src="data.js"></script>
+</head>
+<body>
+
+<div class="phone-frame" id="phoneFrame">
+  <!-- Loading State -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">数据加载中…</div>
+  </div>
+  <!-- Error State -->
+  <div class="error-overlay" id="errorOverlay">
+    <div class="error-text" id="errorText">数据加载失败</div>
+    <button class="error-retry" onclick="location.reload()">重试</button>
+  </div>
+
+  <!-- Auth Page（登录 / 注册） -->
+  <div class="auth-overlay" id="authOverlay">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <div class="icon">🎓</div>
+        <div class="title">智愿</div>
+        <div class="sub">AI 驱动的志愿填报助手</div>
+      </div>
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">登录</button>
+        <button class="auth-tab" id="tabRegister" onclick="switchAuthTab('register')">注册</button>
+      </div>
+      <!-- 登录表单 -->
+      <div id="formLogin">
+        <div class="auth-field"><input type="text" id="loginUser" placeholder="用户名" autocomplete="username"></div>
+        <div class="auth-field"><input type="password" id="loginPass" placeholder="密码" autocomplete="current-password"></div>
+        <button class="auth-btn" id="loginBtn" onclick="handleLogin()">登 录</button>
+        <div class="auth-error" id="loginError"></div>
+      </div>
+      <!-- 注册表单 -->
+      <div id="formRegister" style="display:none;">
+        <div class="auth-field"><input type="text" id="regUser" placeholder="用户名（2-32字符）" autocomplete="username"></div>
+        <div class="auth-field"><input type="email" id="regEmail" placeholder="邮箱" autocomplete="email"></div>
+        <div class="auth-field"><input type="password" id="regPass" placeholder="密码（至少6位）" autocomplete="new-password"></div>
+        <button class="auth-btn" id="regBtn" onclick="handleRegister()">注 册</button>
+        <div class="auth-error" id="regError"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screens Container -->
+  <div class="screens-container" id="screensContainer">
+    <!-- SCREEN 01 ~ 09 are rendered by renderApp() -->
+  </div>
+
+  <!-- Tab Bar (rendered by renderApp) -->
+</div>
+
+<script>
+// ===== 后端 API 配置 =====
+// 空字符串 = 同源（HTML 由后端 /ui/ 托管，API 在同一 origin）
+const API_BASE = '';
+
+// ===== Auth 工具 =====
+let AUTH_TOKEN = localStorage.getItem('zhiyuan_token') || '';
+
+function apiHeaders() {
+  const h = { 'Content-Type': 'application/json' };
+  if (AUTH_TOKEN) h['Authorization'] = 'Bearer ' + AUTH_TOKEN;
+  return h;
+}
+
+async function apiGet(url) {
+  return fetch(API_BASE + url, { headers: apiHeaders() });
+}
+
+async function apiPost(url, body) {
+  return fetch(API_BASE + url, {
+    method: 'POST',
+    headers: apiHeaders(),
+    body: JSON.stringify(body),
+  });
+}
+
+async function apiPut(url, body) {
+  return fetch(API_BASE + url, {
+    method: 'PUT',
+    headers: apiHeaders(),
+    body: JSON.stringify(body),
+  });
+}
+
+// ── 登录/注册页逻辑 ──────────────────────────────────────────
+let authMode = 'login';
+
+function switchAuthTab(mode) {
+  authMode = mode;
+  document.getElementById('tabLogin').classList.toggle('active', mode === 'login');
+  document.getElementById('tabRegister').classList.toggle('active', mode === 'register');
+  document.getElementById('formLogin').style.display = mode === 'login' ? '' : 'none';
+  document.getElementById('formRegister').style.display = mode === 'register' ? '' : 'none';
+  document.getElementById('loginError').textContent = '';
+  document.getElementById('regError').textContent = '';
+}
+
+async function handleLogin() {
+  const u = document.getElementById('loginUser').value.trim();
+  const p = document.getElementById('loginPass').value.trim();
+  const errEl = document.getElementById('loginError');
+  if (!u || !p) { errEl.textContent = '请填写用户名和密码'; return; }
+
+  const btn = document.getElementById('loginBtn');
+  btn.disabled = true; btn.textContent = '登录中...';
+  try {
+    const res = await apiPost('/api/auth/login', { username: u, password: p });
+    if (!res.ok) { const d = await res.json(); throw new Error(d.detail || '登录失败'); }
+    const data = await res.json();
+    AUTH_TOKEN = data.token;
+    localStorage.setItem('zhiyuan_token', AUTH_TOKEN);
+    hideAuth();
+    await loadData();
+  } catch (e) {
+    errEl.textContent = e.message;
+  } finally {
+    btn.disabled = false; btn.textContent = '登 录';
+  }
+}
+
+async function handleRegister() {
+  const u = document.getElementById('regUser').value.trim();
+  const e = document.getElementById('regEmail').value.trim();
+  const p = document.getElementById('regPass').value.trim();
+  const errEl = document.getElementById('regError');
+  if (!u || !e || !p) { errEl.textContent = '请填写所有字段'; return; }
+
+  const btn = document.getElementById('regBtn');
+  btn.disabled = true; btn.textContent = '注册中...';
+  try {
+    const res = await apiPost('/api/auth/register', { username: u, email: e, password: p });
+    if (!res.ok) { const d = await res.json(); throw new Error(d.detail || '注册失败'); }
+    const data = await res.json();
+    AUTH_TOKEN = data.token;
+    localStorage.setItem('zhiyuan_token', AUTH_TOKEN);
+    hideAuth();
+    await loadData();
+  } catch (ex) {
+    errEl.textContent = ex.message;
+  } finally {
+    btn.disabled = false; btn.textContent = '注 册';
+  }
+}
+
+function hideAuth() {
+  document.getElementById('authOverlay').classList.remove('show');
+}
+
+function showAuth() {
+  document.getElementById('authOverlay').classList.add('show');
+  document.getElementById('loadingOverlay').style.display = 'none';
+}
+
+// ===== S09 退出登录按钮 =====
+function patchS09() {
+  const s09 = document.getElementById('s09');
+  if (!s09) return;
+  // 在菜单项最后插入退出登录
+  const menuItems = s09.querySelectorAll('.s09-menu-item');
+  const lastItem = menuItems[menuItems.length - 1];
+  if (!lastItem || document.getElementById('logoutBtn')) return;
+
+  const logoutDiv = document.createElement('div');
+  logoutDiv.id = 'logoutBtn';
+  logoutDiv.className = 's09-menu-item';
+  logoutDiv.style.cssText = 'color:var(--danger);cursor:pointer;';
+  logoutDiv.innerHTML = `
+    <div class="s09-menu-icon">🚪</div>
+    <div class="s09-menu-label">退出登录</div>
+    <span class="s09-menu-arrow">›</span>
+  `;
+  logoutDiv.addEventListener('click', () => {
+    localStorage.removeItem('zhiyuan_token');
+    AUTH_TOKEN = '';
+    location.reload();
+  });
+  lastItem.insertAdjacentElement('afterend', logoutDiv);
+}
+
+// ===== Data Loading =====
+// data.js  → window.APP_JSON_DATA  静态配置（省份列表、UI文案、表单结构等）
+// 后端接口 → 动态数据通过 fetch 获取，不再依赖 test_data.js
+let APP_DATA = null;
+let currentDetailIdx = 0;
+
+async function loadData() {
+  try {
+    if (!window.APP_JSON_DATA) throw new Error('data.js 未加载或数据为空');
+
+    // 深拷贝静态配置
+    APP_DATA = JSON.parse(JSON.stringify(window.APP_JSON_DATA));
+    const s = APP_DATA.screens;
+
+    // s08 用本地宣城学校数据
+    s.s08.schools = window.XUANCHENG_SCHOOLS || [];
+
+    console.log('[Data] 宣城中考志愿通数据已就绪，学校数量: ' + (window.XUANCHENG_SCHOOLS?.length || 0) + ' 所');
+
+    // ──────────────────────────────────────────────────────────────────────────
+
+    renderApp(APP_DATA);
+
+    // 尝试从 localStorage 恢复之前查询的分数
+    const savedScore = localStorage.getItem('zk_last_score');
+    if (savedScore) {
+      requestAnimationFrame(() => {
+        const sv = document.getElementById('totalScore');
+        if (sv) sv.value = savedScore;
+      });
+    }
+
+    document.getElementById('loadingOverlay').style.display = 'none';
+    initApp();
+  } catch (err) {
+    console.error('数据加载失败:', err);
+    document.getElementById('loadingOverlay').style.display = 'none';
+    document.getElementById('errorOverlay').style.display = 'flex';
+    document.getElementById('errorText').textContent = err.message;
+  }
+}
+
+// ===== Render All Screens from Data =====
+function renderApp(d) {
+  const container = document.getElementById('screensContainer');
+  container.innerHTML = '';
+
+  // Build screens
+  for (let i = 0; i < 9; i++) {
+    const screenId = ['s01','s02','s03','s04','s05','s06','s07','s08','s09'][i];
+    const div = document.createElement('div');
+    div.className = 'screen' + (i === 0 ? ' active' : '');
+    div.setAttribute('data-screen', i);
+    div.id = screenId;
+    if (screenId === 's06') div.setAttribute('onscreenenter', 'initScreen06()');
+    div.innerHTML = renderScreen(screenId, d);
+    container.appendChild(div);
+  }
+
+  // Build Tab Bar
+  const tabBar = document.createElement('div');
+  tabBar.className = 'tab-bar';
+  tabBar.id = 'tabBar';
+  d.tabBar.forEach((t, idx) => {
+    tabBar.innerHTML += `<div class="tab-item${idx===0?' active':''}" onclick="switchTab(${t.targetScreen})" data-tab="${idx}">
+      <div class="tab-icon">${t.icon}</div><div>${t.label}</div>
+    </div>`;
+  });
+
+  // Remove old tab bar if exists
+  const oldTab = document.getElementById('tabBar');
+  if (oldTab) oldTab.remove();
+  const oldBrand = document.getElementById('brandBar');
+  if (oldBrand) oldBrand.remove();
+  const pf = document.getElementById('phoneFrame');
+  pf.appendChild(tabBar);
+  // Branding bar
+  const brandBar = document.createElement('div');
+  brandBar.id = 'brandBar';
+  brandBar.style.cssText = 'text-align:center;padding:3px 0;font-size:10px;color:#94A3B8;background:#fff;border-top:1px solid #E2E8F0;';
+  brandBar.textContent = '数据由 宣城本地教育服务 提供 · 招生咨询请留言';
+  pf.appendChild(brandBar);
+  
+  // 初始化涟漪效果
+  setTimeout(() => {
+    initRippleEffects();
+  }, 100);
+}
+
+function renderScreen(id, d) {
+  switch(id) {
+    case 's01': return renderS01(d);
+    case 's02': return renderS02(d);
+    case 's03': return renderS03(d);
+    case 's04': return renderS04(d);
+    case 's05': return renderS05(d);
+    case 's06': return renderS06(d);
+    case 's07': return renderS07(d);
+    case 's08': return renderS08(d);
+    case 's09': return renderS09(d);
+    default: return '';
+  }
+}
+
+// ===== SCREEN 01 =====
+function renderS01(d) {
+  const a = d.app, s = d.screens.s01;
+  let cards = s.featureCards.map((c, i) =>
+    `<div class="s01-feature-card animate-in ${c.animateClass}">
+      <div class="s01-feature-icon ${c.color}">${c.icon}</div>
+      <div><div class="s01-feature-title">${c.title}</div>
+      <div class="s01-feature-desc">${c.desc}</div></div>
+    </div>`
+  ).join('');
+  return `<div class="s01-hero">
+      <div class="s01-logo"><span>${a.name.charAt(0)}</span></div>
+      <div class="s01-title">${a.name}</div>
+      <div class="s01-subtitle">${a.subtitle}</div>
+    </div>
+    <button class="btn btn-accent" onclick="navigateTo(1)">${s.cta}</button>
+    <div style="margin-top:24px;">
+      <div class="typo-label" style="margin-bottom:10px;">核心功能</div>
+      ${cards}
+    </div>
+    <div style="height:80px;"></div>`;
+}
+
+// ===== SCREEN 02 =====
+function renderS02(d) {
+  const s = d.screens.s02;
+  let typeChips = (s.schoolType && s.schoolType.chips ? s.schoolType.chips : [
+    {label:'全部学校',selected:true},{label:'公办',selected:false},{label:'民办',selected:false}
+  ]).map(c =>
+    `<div class="chip${c.selected?' selected':''}" onclick="toggleChip(this)">${c.label}</div>`
+  ).join('');
+  return `<div class="s2-header">
+      <div class="s2-back" onclick="navigateTo(0)">‹</div>
+      <span class="typo-label">分数查询</span>
+    </div>
+    <div class="s2-title">输入你的中考成绩</div>
+    <div class="card">
+      <div class="form-group">
+        <label class="form-label">中考总分</label>
+        <div style="position:relative;">
+          <input class="form-input" type="number" placeholder="${s.score.placeholder}" id="totalScore" value="${s.score.defaultValue}" oninput="onScoreChange()" style="font-size:20px;font-weight:700;text-align:center;padding-right:38px;">
+          <span style="position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--text-secondary);font-weight:500;pointer-events:none;">${s.score.unit}</span>
+        </div>
+        <div class="form-hint form-hint-success" id="scoreHint">💡 超${s.score.基准线名称} +${s.score.defaultValue - s.score.基准线}${s.score.unit}</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">${s.rank.label} <span style="font-weight:400;color:var(--text-muted);">${s.rank.optionalHint}</span></label>
+        <input class="form-input" type="number" placeholder="${s.rank.placeholder}" id="rank">
+      </div>
+    </div>
+    <button class="btn btn-accent" style="margin-top:20px;" onclick="startGenerating()">${s.nextButton}</button>
+    <div style="height:80px;"></div>`;
+}
+
+// ===== SCREEN 03 (skipped for 中考版) =====
+function renderS03(d) {
+  return `<div style="padding:40px;text-align:center;color:var(--text-muted);font-size:14px;">
+    <div style="font-size:48px;margin-bottom:16px;">🎯</div>
+    <div>正在为你匹配学校...</div>
+  </div>`;
+}
+
+// ===== SCREEN 04 (skipped) =====
+function renderS04(d) {
+  return `<div style="padding:40px;text-align:center;color:var(--text-muted);font-size:14px;">
+    <div style="font-size:48px;margin-bottom:16px;">⏳</div>
+    <div>加载中...</div>
+  </div>`;
+}
+
+// ===== SCREEN 05 =====
+function renderS05(d) {
+  const s = d.screens.s05;
+  let steps = s.steps.map(st =>
+    `<div class="s05-step ${st.initialStatus} animate-in ${st.initialStatus==='done'?'delay-1':(st.initialStatus==='doing'?'delay-2':'delay-3')}" id="${st.id}">
+      <div class="s05-step-dot">${st.dot}</div>
+      <div class="s05-step-text">${st.text}</div>
+    </div>`
+  ).join('');
+  return `<div class="s2-header">
+      <div class="s2-back" onclick="navigateTo(0)">‹</div>
+      <span class="typo-label">正在匹配</span>
+    </div>
+    <div class="s05-content">
+      <div class="s05-icon"><div class="s05-spinner">${s.icon}</div></div>
+      <div class="s05-title">${s.title}</div>
+      <div class="s05-subtitle">${s.subtitle}</div>
+      <div class="s05-step-list">${steps}</div>
+    </div>`;
+}
+
+// ===== SCREEN 06 =====
+function renderS06(d) {
+  const s = d.screens.s06;
+  if (!s || !s.summary) {
+    return `<div class="s06-header"><div class="typo-h2">查询结果</div></div>
+      <div class="card-purple s06-summary" style="text-align:center;padding:40px;">
+        <div style="color:var(--text-muted);">尚未查询，请先输入分数</div>
+      </div>`;
+  }
+  let stats = s.summary.stats.map(st =>
+    `<div class="s06-stat"><div class="s06-stat-val">${st.val}</div><div class="s06-stat-label">${st.label}</div></div>`
+  ).join('');
+
+  let groupsHTML = s.groups.map((g, gi) => {
+    let schoolCards = g.schools.map((sch, si) => {
+      let tags = sch.tags.map(t => `<span class="s06-tag s06-tag-${t.toLowerCase()}">${t}</span>`).join('');
+      let globalIdx = gi * 100 + si;
+      return `<div class="s06-school-card" onclick="navigateToDet(${globalIdx})">
+        <div class="s06-school-rank ${g.type}">${sch.rank}</div>
+        <div class="s06-school-info">
+          <div class="s06-school-name">${sch.name}</div>
+          <div class="s06-school-tags">${tags}</div>
+          <div class="s06-school-major">${sch.major}</div>
+          <div class="s06-school-loc">${sch.location}</div>
+        </div>
+        <div class="s06-school-rate"><div class="s06-rate-val">${sch.rate}</div><div class="s06-rate-label">录取率</div></div>
+      </div>`;
+    }).join('');
+    return `<div class="s06-group-title">${g.title} <span class="s06-group-badge ${g.type}">${g.badgeLabel}</span></div>${schoolCards}`;
+  }).join('');
+
+  return `<div class="s06-header">
+      <div class="typo-h2">查询结果</div>
+      <div class="s06-share" onclick="alert('分享功能开发中')">${s.shareLabel || '分享'}</div>
+    </div>
+    <div class="card-purple s06-summary">
+      <div class="typo-h3" style="margin-bottom:4px;">${s.summary.title}</div>
+      <div class="typo-caption">${s.summary.rate}</div>
+      <div class="s06-summary-stats">${stats}</div>
+    </div>
+    ${groupsHTML}
+    <!-- 线索收集：在结果页底部引导留资 -->
+    <div class="card" style="margin-top:16px;background:linear-gradient(135deg,#EEF2FF,#fff);">
+      <div class="typo-label" style="margin-bottom:4px;">📞 想获取更精准的报考建议？</div>
+      <div class="typo-caption" style="margin-bottom:10px;">扫码进群，李老师一对一为你分析</div>
+      <div style="text-align:center;padding:12px 0;">
+        <img src="/qrcode.jpg" style="width:200px;height:200px;border-radius:8px;border:1px solid #eee;" alt="扫码进群">
+        <div style="font-size:12px;color:#666;margin-top:6px;">👆 长按识别二维码 · 文杰教育 李老师</div>
+      </div>
+    </div>
+    <div style="height:80px;"></div>`;
+}
+
+// ===== SCREEN 07 =====
+function renderS07(d) {
+  return `<div class="s07-header">
+      <div class="s07-back-btn" onclick="navigateTo(7)">‹</div>
+      <div class="s07-title-header">院校详情</div>
+    </div>
+    <div class="card" id="s07DetailCard">
+      <div style="text-align:center;padding:40px;color:var(--text-muted);font-size:14px;line-height:1.8;">
+        <div style="font-size:48px;margin-bottom:16px;">🏫</div>
+        <div>点击「查学校」列表中的学校名称</div>
+        <div style="font-size:12px;color:#bbb;margin-top:4px;">查看详细信息</div>
+      </div>
+    </div>
+    <div style="height:80px;"></div>`;
+}
+
+// ===== SCREEN 08 =====
+function renderS08(d) {
+  const s = d.screens.s08;
+  let filters = s.filters.map(f =>
+    `<div class="chip${f.selected?' selected':''}" onclick="toggleChip(this)">${f.label}</div>`
+  ).join('');
+  let schools = window.XUANCHENG_SCHOOLS || [];
+  let schoolItems = schools.map(sch => {
+    let rankClass = sch.type === '公办' ? 'stable' : 'safe';
+    let tags = (sch.tags || []).map(t => `<span class="s06-tag" style="background:#EEF2FF;color:#4F46E5;font-size:10px;">${t}</span>`).join('');
+    return `<div class="s08-school-list-item" onclick="showSchoolDetail('${sch.name}')">
+      <div class="s06-school-rank ${rankClass}">${sch.type === '公办' ? '公' : '民'}</div>
+      <div class="s06-school-info">
+        <div class="s06-school-name">${sch.name}</div>
+        <div class="s06-school-loc">${sch.level} · ${sch.address || '宣州区'}</div>
+        <div class="s06-school-tags">${tags}</div>
+      </div>
+      <div class="s06-school-rate">
+        <div class="s06-rate-val">${sch.admission?.['2025']?.minScore || sch.admission?.['2024']?.minScore || '—'}</div>
+        <div class="s06-rate-label">2025统招线</div>
+      </div>
+    </div>`;
+  }).join('');
+  return `<div style="padding-top:12px;">
+      <div class="typo-h2" style="margin-bottom:16px;">${s.title}</div>
+    </div>
+    <div class="s08-search">
+      <span class="s08-search-icon">🔍</span>
+      <input class="form-input" type="text" placeholder="${s.searchPlaceholder}" style="padding-left:38px;" id="schoolSearchInput" oninput="filterSchools(this.value)">
+    </div>
+    <div class="s08-filters"><div class="chip-group" id="schoolFilterGroup">${filters}</div></div>
+    <div id="schoolListContainer">${schoolItems}</div>
+    <div style="height:80px;"></div>`;
+}
+
+function filterSchools(query) {
+  const q = (query || '').toLowerCase();
+  const container = document.getElementById('schoolListContainer');
+  if (!container) return;
+  const items = container.querySelectorAll('.s08-school-list-item');
+  items.forEach(item => {
+    const name = item.querySelector('.s06-school-name')?.textContent?.toLowerCase() || '';
+    item.style.display = q ? (name.includes(q) ? '' : 'none') : '';
+  });
+}
+
+// ===== SCREEN 09 =====
+function renderS09(d) {
+  const s = d.screens.s09;
+  let menuItems = (s.menuItems || []).map(m => {
+    let badgeHTML = m.badge ? `<span class="s09-menu-badge">${m.badge}</span>` : '';
+    let action = m.action ? `onclick="${m.action}"` : '';
+    return `<div class="s09-menu-item" ${action}>
+      <div class="s09-menu-icon">${m.icon}</div>
+      <div class="s09-menu-label">${m.label}</div>
+      ${badgeHTML}
+      <span class="s09-menu-arrow">›</span>
+    </div>`;
+  }).join('');
+
+  // 已保存的联系方式回填
+  const savedPhone = localStorage.getItem('zk_phone') || '';
+  const savedWechat = localStorage.getItem('zk_wechat') || '';
+  const savedName = localStorage.getItem('zk_name') || '';
+
+  return `<div style="padding-top:12px;">
+      <div class="typo-h2" style="margin-bottom:20px;">我的</div>
+    </div>
+    <div class="s09-profile">
+      <div class="s09-avatar">🎓</div>
+      <div>
+        <div class="s09-user-name">宣城中考志愿通</div>
+        <div class="s09-user-detail">宣州区高中录取查询工具</div>
+      </div>
+    </div>
+    <!-- 联系方式收集 -->
+    <div class="card" style="margin-bottom:16px;">
+      <div class="typo-label" style="margin-bottom:8px;">📞 文杰教育 · 中考咨询</div>
+      <div class="typo-caption" style="margin-bottom:12px;">扫码进群，李老师一对一为你分析</div>
+      <div style="text-align:center;padding:8px 0;">
+        <img src="/qrcode.jpg" style="width:200px;height:200px;border-radius:8px;border:1px solid #eee;" alt="扫码进群">
+        <div style="font-size:12px;color:#666;margin-top:6px;">👆 长按识别 · 文杰教育 李老师</div>
+      </div>
+    </div>
+    ${menuItems}
+    <div style="height:80px;"></div>`;
+}
+
+// ===== 提交联系方式（结果页快捷版） =====
+function quickSubmitContact() {
+  const phone = document.getElementById('resultPhone')?.value?.trim();
+  const status = document.getElementById('resultContactStatus');
+  if (!phone || phone.length < 11) {
+    status.textContent = '请输入正确的手机号';
+    status.style.color = 'var(--danger)';
+    return;
+  }
+  localStorage.setItem('zk_phone', phone);
+  const data = { name: '', phone, wechat: '', score: 0, source: '文杰教育', page_source: '查询结果页' };
+  fetch('/api/contact', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  }).catch(() => {});
+  status.innerHTML = '✅ 已提交！<br>长按识别下方二维码进群，李老师在群里等你';
+  status.style.color = 'var(--success)';
+  status.style.fontSize = '13px';
+  status.style.lineHeight = '1.6';
+  // 显示二维码
+  const qrDiv = document.getElementById('resultQrCode');
+  if (qrDiv) qrDiv.style.display = 'block';
+  const cp = document.getElementById('contactPhone');
+  if (cp) cp.value = phone;
+}
+
+// ===== 提交联系方式（我的页完整版） =====
+function submitContact() {
+  const name = document.getElementById('contactName')?.value?.trim();
+  const phone = document.getElementById('contactPhone')?.value?.trim();
+  const wechat = document.getElementById('contactWechat')?.value?.trim();
+  const status = document.getElementById('contactStatus');
+
+  if (!name) { status.textContent = '请输入学生姓名'; status.style.color = 'var(--danger)'; return; }
+  if (!phone || phone.length < 11) { status.textContent = '请输入正确的手机号'; status.style.color = 'var(--danger)'; return; }
+
+  // 保存到本地
+  localStorage.setItem('zk_name', name);
+  localStorage.setItem('zk_phone', phone);
+  if (wechat) localStorage.setItem('zk_wechat', wechat);
+
+  // 发送到后端
+  const scoreEl = document.getElementById('totalScore');
+  const score = scoreEl ? parseInt(scoreEl.value) || 0 : 0;
+  const data = { name, phone, wechat, score, source: '文杰教育', page_source: '我的页-咨询表单' };
+  fetch('/api/contact', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  }).catch(() => {});
+
+  status.innerHTML = '✅ 提交成功！<br>长按识别下方二维码进群，李老师在群里等你';
+  status.style.color = 'var(--success)';
+  status.style.fontSize = '13px';
+  status.style.lineHeight = '1.6';
+  const qrDiv = document.getElementById('contactQrCode');
+  if (qrDiv) qrDiv.style.display = 'block';
+  showToast('已提交，扫码进群 ✓');
+}
+
+// ===== Utility: find school detail by index =====
+function findSchoolByIndex(idx) {
+  const groups = APP_DATA.screens.s06.groups;
+  let flatIdx = 0;
+  for (let gi = 0; gi < groups.length; gi++) {
+    for (let si = 0; si < groups[gi].schools.length; si++) {
+      if (flatIdx === idx) return { school: groups[gi].schools[si], groupType: groups[gi].type };
+      flatIdx++;
+    }
+  }
+  return null;
+}
+
+function findSchoolByName(name) {
+  const groups = APP_DATA.screens.s06.groups;
+  for (let gi = 0; gi < groups.length; gi++) {
+    for (let si = 0; si < groups[gi].schools.length; si++) {
+      if (groups[gi].schools[si].name === name) return groups[gi].schools[si];
+    }
+  }
+  return null;
+}
+
+function buildDetailHTML(school, rate, groupType) {
+  const sd = school.detail;
+  const rankClass = groupType || 'rush';
+  let tagsHTML = '';
+  if (sd.category === '985') tagsHTML += '<span class="s06-tag s06-tag-985">985</span>';
+  if (school.tags.includes('211')) tagsHTML += '<span class="s06-tag s06-tag-211">211</span>';
+  if (sd['双一流标签']) tagsHTML += `<span class="s06-tag" style="background:#EDE9FE;color:#6D28D9;">${sd['双一流标签']}</span>`;
+  tagsHTML += `<span class="s06-tag" style="background:#FEF3C7;color:#B45309;">${school.rank}</span>`;
+
+  let reasonsHTML = sd.reasons.map(r =>
+    `<div class="s07-reason-card ${r.type}">
+      <div class="s07-reason-title">${r.title}</div>
+      <div class="s07-reason-desc">${r.desc}</div>
+    </div>`
+  ).join('');
+
+  return `<div class="s07-school-header">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+        <div class="s07-school-name-lg">${school.name}</div>
+        <span class="s07-rate-badge">${rate||school.rate} 冲击</span>
+      </div>
+      <div class="s06-school-tags" style="margin-bottom:8px;">${tagsHTML}</div>
+      <div class="s07-major-name">${sd.major}</div>
+      <div class="s07-tuition">学费 ${sd.tuition}元/年 · 学制${sd.duration}</div>
+    </div>
+    <div class="typo-label" style="margin-bottom:10px;">AI 推荐理由</div>
+    ${reasonsHTML}
+    <div class="s07-warning">
+      <div class="s07-warning-icon">⚠️</div>
+      <div class="s07-warning-text">${sd.warning}</div>
+    </div>
+    <div class="s07-actions">
+      <button class="btn btn-outline" onclick="alert('已换一个推荐')">换一个</button>
+      <button class="btn btn-outline" style="color:var(--danger);border-color:#FECACA;" onclick="alert('已删除')">删除</button>
+    </div>`;
+}
+
+function navigateToDetBySchool(name) {
+  const school = findSchoolByName(name);
+  if (!school) return;
+  updateDetailCard(school, school.rate, 'rush');
+  navigateTo(6);
+}
+
+function updateDetailCard(school, rate, groupType) {
+  const card = document.getElementById('s07DetailCard');
+  if (card) card.innerHTML = buildDetailHTML(school, rate, groupType);
+}
+
+// ===== App Init =====
+function initApp() {
+  scalePhone();
+  onScoreChange();
+  console.log('宣城中考志愿通已就绪 | 学校数量: ' + (window.XUANCHENG_SCHOOLS?.length || 0));
+}
+
+// ===== 全局变量 =====
+const YOUR_PHONE = '';
+const YOUR_ORG = '文杰教育';
+let currentScreen = 0;
+let transitioning = false;
+const SCREENS = ['s01','s02','s03','s04','s05','s06','s07','s08','s09'];
+
+// ===== Screen Navigation =====
+function navigateTo(targetIdx) {
+  if (transitioning || targetIdx === currentScreen) return;
+  transitioning = true;
+
+  const currentEl = document.getElementById(SCREENS[currentScreen]);
+  const targetEl = document.getElementById(SCREENS[targetIdx]);
+
+  if (targetIdx > currentScreen) {
+    currentEl.classList.add('exit-left');
+  } else {
+    currentEl.classList.add('exit-right');
+  }
+  currentEl.classList.remove('active');
+
+  targetEl.classList.remove('exit-left', 'exit-right');
+  targetEl.style.transform = targetIdx > currentScreen ? 'translateX(40px)' : 'translateX(-40px)';
+  targetEl.classList.add('active');
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      targetEl.style.transform = 'translateX(0)';
+    });
+  });
+
+  setTimeout(() => {
+    currentEl.classList.remove('exit-left', 'exit-right');
+    targetEl.style.transform = '';
+    currentScreen = targetIdx;
+    updateTabBar(targetIdx);
+    transitioning = false;
+
+    const handler = targetEl.getAttribute('onscreenenter');
+    if (handler) { try { new Function(handler)(); } catch(e) {} }
+    targetEl.scrollTop = 0;
+  }, 360);
+}
+
+function switchTab(targetIdx) {
+  if (transitioning) return;
+  navigateTo(targetIdx);
+}
+
+function updateTabBar(screenIdx) {
+  const tabs = document.querySelectorAll('.tab-item');
+  tabs.forEach(t => t.classList.remove('active'));
+  // 首页=0 → tab0, 查学校=7 → tab1, 咨询/我的=8 → tab2
+  const tabMap = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 1, 8: 2 };
+  const tabIdx = tabMap[screenIdx];
+  if (tabIdx >= 0 && tabs[tabIdx]) tabs[tabIdx].classList.add('active');
+}
+
+// ===== Chip Toggle =====
+function toggleChip(el) {
+  el.classList.toggle('selected');
+}
+
+// ===== Subject Chip Toggle (max 3) =====
+function toggleSubjectChip(el) {
+  const group = document.getElementById('subjectGroup');
+  if (!group) return;
+  const allChips = group.querySelectorAll('.chip');
+  const selectedChips = group.querySelectorAll('.chip.selected');
+  const maxSubjects = APP_DATA ? APP_DATA.screens.s02.maxSubjects : 3;
+
+  if (el.classList.contains('selected')) {
+    el.classList.remove('selected');
+  } else {
+    if (selectedChips.length >= maxSubjects) {
+      showToast('选科组合最多选择 ' + maxSubjects + ' 门');
+      return;
+    }
+    el.classList.add('selected');
+  }
+
+  const updatedSelected = group.querySelectorAll('.chip.selected');
+  allChips.forEach(c => {
+    if (!c.classList.contains('selected')) {
+      c.classList.toggle('disabled', updatedSelected.length >= maxSubjects);
+    }
+  });
+}
+
+function initSubjectChips() {
+  const group = document.getElementById('subjectGroup');
+  if (!group) return;
+  const allChips = group.querySelectorAll('.chip');
+  const selectedCount = group.querySelectorAll('.chip.selected').length;
+  const maxSubjects = APP_DATA ? APP_DATA.screens.s02.maxSubjects : 3;
+  allChips.forEach(c => {
+    if (!c.classList.contains('selected')) {
+      c.classList.toggle('disabled', selectedCount >= maxSubjects);
+    }
+  });
+}
+
+// ===== Priority Card Selection =====
+function selectPriority(el) {
+  document.querySelectorAll('#s04 .s04-priority-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+// ===== Template Apply =====
+function applyTemplate(type) {
+  if (type === 'science') {
+    document.getElementById('prioritySchool')?.classList.add('selected');
+    document.getElementById('priorityMajor')?.classList.remove('selected');
+    document.getElementById('priorityRegion')?.classList.remove('selected');
+    document.getElementById('prioritySafe')?.classList.remove('selected');
+  } else {
+    document.getElementById('prioritySafe')?.classList.add('selected');
+    document.getElementById('prioritySchool')?.classList.remove('selected');
+    document.getElementById('priorityMajor')?.classList.remove('selected');
+    document.getElementById('priorityRegion')?.classList.remove('selected');
+  }
+  showToast('已应用「' + (type === 'science' ? '理科技术流' : '文科体制内') + '」模板');
+}
+
+// ===== Form Interactions =====
+async function onProvinceChange() {
+  const val = document.getElementById('province')?.value;
+  const autoMode = document.getElementById('autoMode');
+  const examInput = document.getElementById('examModeInput');
+  if (!autoMode) return;
+  autoMode.style.display = val ? 'inline-block' : 'none';
+
+  // 请求后端获取该省份高考模式配置
+  if (!val || !APP_DATA) {
+    // 未选择省份时恢复占位文字
+    if (examInput) {
+      examInput.value = APP_DATA?.screens?.s02?.examModePlaceholder || '选择省份后自动识别';
+      examInput.style.color = 'var(--text-muted)';
+    }
+    return;
+  }
+  try {
+    const res = await apiGet(`/api/province/${val}/exam-config`);
+    if (!res.ok) throw new Error('获取省份配置失败');
+    const cfg = await res.json();
+    APP_DATA.screens.s02.autoModeTag = cfg.autoModeTag;
+    Object.assign(APP_DATA.screens.s02.score, cfg.score);
+    // 更新 UI：input 框 + 标签
+    if (examInput) {
+      examInput.value = cfg.autoModeTag;
+      examInput.style.color = 'var(--text-primary)';
+    }
+    const autoEl = document.getElementById('autoMode');
+    if (autoEl) autoEl.textContent = cfg.autoModeTag;
+    console.log('[API] 省份配置已更新：' + cfg.autoModeTag);
+  } catch (err) {
+    console.warn('[API] 省份配置获取失败，使用默认值', err);
+  }
+}
+
+function onScoreChange() {
+  const scoreEl = document.getElementById('totalScore');
+  const hint = document.getElementById('scoreHint');
+  if (!scoreEl || !hint || !APP_DATA) return;
+  const score = parseInt(scoreEl.value) || 0;
+  const s = APP_DATA.screens.s02.score;
+  if (score > s.基准线) {
+    hint.textContent = '💡 超' + s.基准线名称 + ' +' + (score - s.基准线) + s.unit;
+    hint.className = 'form-hint form-hint-success';
+  } else {
+    hint.textContent = '💡 请输入有效总分';
+    hint.className = 'form-hint';
+  }
+}
+
+// ===== Start Generation (本地匹配，无需后端) =====
+let _animTimer2 = null;
+let _navigated2 = false;
+
+async function startGenerating() {
+  _navigated2 = false;
+
+  // 1. 收集分数和排名
+  const scoreEl = document.getElementById('totalScore');
+  const rankEl  = document.getElementById('rank');
+  const score   = scoreEl ? parseInt(scoreEl.value) || 650 : 650;
+  const rank    = rankEl  ? parseInt(rankEl.value) || 0 : 0;
+
+  // 2. 保存分数到本地
+  localStorage.setItem('zk_last_score', String(score));
+
+  // 2. 跳到 S05 动画页
+  navigateTo(4);
+  if (!APP_DATA) return;
+
+  // 3. 本地匹配（模拟异步，让动画有时间播放）
+  const matchPromise = new Promise(resolve => {
+    setTimeout(() => {
+      const matched = window.getMatchedSchools ? window.getMatchedSchools(score, rank) : null;
+      if (matched) {
+        // 构建 s06 数据结构
+        const s06 = buildResultData(matched, score);
+        APP_DATA.screens.s06 = s06;
+      } else {
+        APP_DATA.screens.s06 = null;
+      }
+      resolve();
+    }, 600);
+  });
+
+  // 4. 启动动画循环
+  playAnimCycle2(matchPromise);
+}
+
+function buildResultData(matched, score) {
+  const groups = [];
+  const labelMap = { rush: '冲刺', stable: '推荐', safe: '保底' };
+  const typeMap = { rush: 'rush', stable: 'stable', safe: 'safe' };
+  const badgeMap = { rush: '可冲刺', stable: '✓ 推荐', safe: '保底 ✓' };
+
+  ['rush', 'stable', 'safe'].forEach(key => {
+    const items = matched[key] || [];
+    if (items.length === 0) return;
+    const schoolCards = items.map((item, idx) => {
+      const sch = item.school;
+      const ad2025 = sch.admission && sch.admission["2025"];
+      const ad = ad2025 || (sch.admission ? sch.admission[Object.keys(sch.admission)[0]] : null);
+      const minScore = ad ? ad.minScore : '—';
+      const planCount = ad ? ad.planCount : '—';
+      const rank = ad ? ad.rank : null;
+      const rankNum = idx + 1;
+      const diff = score - (typeof minScore === 'number' ? minScore : 0);
+      const rateVal = score > 0 && minScore !== '—' ? Math.round((score - minScore) / minScore * 100 + 100) : '—';
+      return {
+        rank: rankNum,
+        name: sch.name,
+        tags: sch.tags || [],
+        major: sch.level + (sch.type ? ' · ' + sch.type : ''),
+        location: sch.address || '宣州区',
+        rate: diff > 60 ? '保底 ✓' : (diff >= 40 ? '录取 ✓' : (diff >= 0 ? Math.min(99, 80 + Math.floor(diff/2)) + '%' : '差' + Math.abs(diff) + '分')),
+        detail: {
+          category: sch.level,
+          major: '',
+          tuition: '',
+          duration: '3年',
+          reasons: [
+            { type: 'score', title: '📊 2025年录取线', desc: ad2025 ? '2025年统招线 ' + ad2025.minScore + ' 分，区排名' + ad2025.rank + ' 名。你的分数 ' + (diff >= 0 ? '超线 ' + diff + ' 分' : '差 ' + Math.abs(diff) + ' 分') : '' },
+            { type: 'match', title: '🏫 学校介绍', desc: sch.description || '' },
+            { type: 'trend', title: '📈 五年趋势', desc: '分数线趋势：2021→' + (sch.admission?.["2021"]?.minScore || '—') + ' 2022→' + (sch.admission?.["2022"]?.minScore || '—') + ' 2023→' + (sch.admission?.["2023"]?.minScore || '—') + ' 2024→' + (sch.admission?.["2024"]?.minScore || '—') + ' 2025→' + (ad2025?.minScore || '—') }
+          ],
+          warning: diff < 0 ? '⚠️ 低于去年录取线，建议同时考虑保底学校' : '✅ 你的分数在往年录取范围内'
+        }
+      };
+    });
+    groups.push({
+      title: labelMap[key] + ' (' + schoolCards.length + ')',
+      type: typeMap[key],
+      badgeLabel: badgeMap[key],
+      schools: schoolCards
+    });
+  });
+
+  return {
+    shareLabel: '分享',
+    summary: {
+      title: '你的分数：' + score + ' 分',
+      rate: '基于2025年宣州区高中录取数据（含近5年趋势）',
+      stats: [
+        { val: groups.reduce((s,g) => s + g.schools.length, 0), label: '匹配学校' },
+        { val: (groups.find(g => g.type === 'rush')?.schools?.length || 0), label: '冲刺' },
+        { val: (groups.find(g => g.type === 'stable')?.schools?.length || 0), label: '推荐' },
+        { val: (groups.find(g => g.type === 'safe')?.schools?.length || 0), label: '保底' }
+      ]
+    },
+    groups: groups
+  };
+}
+
+function playAnimCycle2(matchPromise) {
+  if (_navigated2) return;
+  clearTimeout(_animTimer2);
+  _resetSteps2();
+
+  // 1.2s → 步骤2完成，步骤3进行中
+  _animTimer2 = setTimeout(() => {
+    const s2 = document.getElementById('genStep2');
+    if (s2) { s2.classList.remove('doing'); s2.classList.add('done'); }
+    const s3 = document.getElementById('genStep3');
+    if (s3) { s3.classList.remove('pending'); s3.classList.add('doing'); }
+  }, 1200);
+
+  // 2.5s → 步骤3完成
+  _animTimer2 = setTimeout(() => {
+    const s3 = document.getElementById('genStep3');
+    if (s3) { s3.classList.remove('doing'); s3.classList.add('done'); }
+  }, 2500);
+
+  // 3s → 跳转到结果
+  _animTimer2 = setTimeout(async () => {
+    if (_navigated2) return;
+    try { await matchPromise; } catch (_) {}
+    if (APP_DATA.screens.s06) {
+      _navigated2 = true;
+      // 更新 s06 内容
+      const s06El = document.getElementById('s06');
+      if (s06El) {
+        // 重新渲染 s06 内的内容（不重建整个screen，保留screen包装）
+        const contentDiv = s06El;
+        // 重新渲染全部screen以更新数据
+        const allScreens = document.getElementById('screensContainer');
+        if (allScreens) {
+          const oldS06 = document.getElementById('s06');
+          if (oldS06) {
+            oldS06.innerHTML = renderScreen('s06', APP_DATA);
+          }
+        }
+      }
+      navigateTo(5);
+    } else {
+      playAnimCycle2(matchPromise);
+    }
+  }, 3000);
+}
+
+function _resetSteps2() {
+  const s1 = document.getElementById('genStep1');
+  const s2 = document.getElementById('genStep2');
+  const s3 = document.getElementById('genStep3');
+  if (s1) { s1.className = 's05-step done animate-in'; }
+  if (s2) {
+    s2.className = 's05-step doing animate-in delay-1';
+    (s2.querySelector('.s05-step-dot') || {}).textContent = '🔵';
+    (s2.querySelector('.s05-step-text') || {}).textContent = '检索往年录取数据 — 进行中';
+  }
+  if (s3) {
+    s3.className = 's05-step pending animate-in delay-2';
+    (s3.querySelector('.s05-step-dot') || {}).textContent = '⭕';
+    (s3.querySelector('.s05-step-text') || {}).textContent = '匹配推荐学校 — 等待中';
+  }
+}
+
+// ===== School detail on click =====
+function showSchoolDetail(name) {
+  const school = window.XUANCHENG_SCHOOLS?.find(s => s.name === name);
+  if (!school) return;
+  const ad = school.admission?.["2025"] || school.admission?.["2024"];
+  const detailCard = document.getElementById('s07DetailCard');
+  if (!detailCard) return;
+
+  // Build admission history table
+  const years = ['2025','2024','2023','2022','2021'];
+  let adRows = '';
+  years.forEach(y => {
+    const d = school.admission?.[y];
+    if (d && d.minScore) {
+      adRows += `<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f0f0f0;font-size:13px;">
+        <span style="color:#666;">${y}年</span>
+        <span><strong>${d.minScore}分</strong>${d.rank ? ' · 排名' + d.rank : ''}${d.planCount ? ' · 招' + d.planCount + '人' : ''}</span>
+      </div>`;
+    }
+  });
+
+  const tags = (school.tags || []).map(t =>
+    `<span class="s06-tag" style="background:#EEF2FF;color:#4F46E5;font-size:10px;">${t}</span>`
+  ).join('');
+
+  const features = (school.features || []).map(f =>
+    `<span class="s06-tag" style="background:#D1FAE5;color:#059669;font-size:10px;">${f}</span>`
+  ).join('');
+
+  detailCard.innerHTML = `
+    <div style="margin-bottom:12px;">
+      <div class="typo-h2" style="margin-bottom:4px;">${school.name}</div>
+      <div class="typo-caption">${school.level || ''} · ${school.type || ''}</div>
+      <div style="margin-top:6px;">${tags} ${features}</div>
+    </div>
+
+    <div class="card" style="padding:12px;background:#F8FAFC;margin-bottom:12px;">
+      <div style="font-size:13px;line-height:1.8;color:#333;">
+        ${school.description || '暂无简介'}
+      </div>
+    </div>
+
+    ${school.address ? `
+    <div style="display:flex;gap:8px;margin-bottom:12px;font-size:13px;">
+      <div class="card" style="padding:10px;flex:1;text-align:center;">
+        <div style="color:#999;">📍 地址</div>
+        <div style="font-weight:500;font-size:12px;">${school.address}</div>
+      </div>
+      ${school.phone ? `
+      <div class="card" style="padding:10px;flex:1;text-align:center;">
+        <div style="color:#999;">📞 电话</div>
+        <div style="font-weight:500;color:#4F46E5;">${school.phone}</div>
+      </div>` : ''}
+    </div>` : ''}
+
+    ${adRows ? `
+    <div style="margin-top:8px;">
+      <div class="typo-label" style="margin-bottom:6px;">📊 历年录取分数线</div>
+      <div class="card" style="padding:8px 12px;">${adRows}</div>
+    </div>` : ''}
+
+    ${ad ? `
+    <div style="margin-top:12px;padding:10px;background:linear-gradient(135deg,#EEF2FF,#fff);border-radius:8px;font-size:13px;">
+      <strong>💡 2025年报考参考</strong><br>
+      统招线：<strong style="color:#4F46E5;">${ad.minScore}分</strong>
+      ${ad.rank ? ' · 区排名约 <strong>' + ad.rank + '名</strong>' : ''}
+      ${ad.planCount ? ' · 招生计划约 <strong>' + ad.planCount + '人</strong>' : ''}
+    </div>` : ''}
+  `;
+
+  navigateTo(6);
+}
+
+// ===== Detail Navigation =====
+function navigateToDet(idx) {
+  const result = findSchoolByIndex(idx);
+  if (result) {
+    updateDetailCard(result.school, result.school.rate, result.groupType);
+  }
+  navigateTo(6);
+}
+
+// ===== Ripple Effect =====
+function createRipple(event) {
+  const button = event.currentTarget;
+  const ripple = document.createElement('span');
+  const rect = button.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height) * 2;
+  const x = event.clientX - rect.left - size / 2;
+  const y = event.clientY - rect.top - size / 2;
+  
+  ripple.style.cssText = `
+    width: ${size}px;
+    height: ${size}px;
+    left: ${x}px;
+    top: ${y}px;
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(0);
+    animation: ripple-animation 0.6s ease-out;
+    pointer-events: none;
+  `;
+  
+  // 确保按钮有 relative 和 overflow: hidden
+  if (getComputedStyle(button).position === 'static') {
+    button.style.position = 'relative';
+  }
+  button.style.overflow = 'hidden';
+  
+  button.appendChild(ripple);
+  
+  setTimeout(() => {
+    ripple.remove();
+  }, 600);
+}
+
+// 给所有需要 ripple 效果的元素添加事件监听
+function initRippleEffects() {
+  const rippleElements = document.querySelectorAll('.btn, .chip:not(.disabled), .s06-school-card, .s08-school-list-item, .s09-menu-item, .s01-feature-card, .s04-priority-card, .s2-back, .s07-back-btn, .tab-item');
+  
+  rippleElements.forEach(el => {
+    // 先移除已有的事件监听（避免重复添加）
+    el.removeEventListener('click', el._rippleHandler);
+    el._rippleHandler = function(e) {
+      createRipple(e);
+    };
+    el.addEventListener('click', el._rippleHandler);
+  });
+}
+
+// 在 renderApp 之后调用 initRippleEffects
+const originalRenderApp = renderApp;
+renderApp = function(d) {
+  originalRenderApp(d);
+  // 延迟执行，确保 DOM 已更新
+  setTimeout(() => {
+    initRippleEffects();
+  }, 100);
+};
+
+// ===== Ripple Effect =====
+function createRipple(event) {
+  const button = event.currentTarget;
+  const ripple = document.createElement('span');
+  const rect = button.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height) * 2;
+  const x = event.clientX - rect.left - size / 2;
+  const y = event.clientY - rect.top - size / 2;
+  
+  ripple.style.cssText = `
+    width: ${size}px;
+    height: ${size}px;
+    left: ${x}px;
+    top: ${y}px;
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(0);
+    animation: ripple-animation 0.6s ease-out;
+    pointer-events: none;
+  `;
+  
+  // 确保按钮有 relative 和 overflow: hidden
+  if (getComputedStyle(button).position === 'static') {
+    button.style.position = 'relative';
+  }
+  button.style.overflow = 'hidden';
+  
+  button.appendChild(ripple);
+  
+  setTimeout(() => {
+    ripple.remove();
+  }, 600);
+}
+
+// 给所有需要 ripple 效果的元素添加事件监听
+function initRippleEffects() {
+  const rippleElements = document.querySelectorAll('.btn, .chip:not(.disabled), .s06-school-card, .s08-school-list-item, .s09-menu-item, .s01-feature-card, .s04-priority-card, .s2-back, .s07-back-btn, .tab-item');
+  
+  rippleElements.forEach(el => {
+    // 先移除已有的事件监听（避免重复添加）
+    if (el._rippleHandler) {
+      el.removeEventListener('click', el._rippleHandler);
+    }
+    el._rippleHandler = function(e) {
+      createRipple(e);
+    };
+    el.addEventListener('click', el._rippleHandler);
+  });
+}
+
+// ===== Toast =====
+function showToast(msg) {
+  let toast = document.getElementById('toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'toast';
+    document.body.appendChild(toast);
+  }
+  
+  // 清除之前的动画
+  toast.style.animation = 'none';
+  toast.offsetHeight; // 触发 reflow
+  
+  toast.textContent = msg;
+  toast.style.cssText = `
+    position: fixed;
+    bottom: 120px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1E1B4B;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-family: var(--font);
+    z-index: 999;
+    pointer-events: none;
+    white-space: nowrap;
+    animation: toast-in 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  `;
+  
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => {
+    toast.style.animation = 'toast-out 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards';
+    setTimeout(() => {
+      if (toast.parentNode) {
+        toast.parentNode.removeChild(toast);
+      }
+    }, 300);
+  }, 2000);
+}
+
+// ===== Screen 06 Init =====
+function initScreen06() { /* reserved */ }
+
+// ===== Responsive Scaling =====
+function scalePhone() {
+  if (window.innerWidth <= 500) return; // 手机上不缩放
+  const phone = document.getElementById('phoneFrame');
+  if (!phone) return;
+  const winW = window.innerWidth;
+  const winH = window.innerHeight;
+  const scaleX = (winW - 32) / 375;
+  const scaleY = (winH - 32) / 812;
+  const scale = Math.min(scaleX, scaleY, 1);
+  phone.style.transform = 'scale(' + scale + ')';
+}
+
+window.addEventListener('resize', scalePhone);
+window.addEventListener('load', () => { scalePhone(); loadData(); lockHeight(); });
+
+// ===== 锁死页面：键盘弹出不压缩 =====
+function lockHeight() {
+  if (window.innerWidth > 500) return;
+  const phone = document.getElementById('phoneFrame');
+  if (!phone) return;
+  // 用屏幕物理高度，永不随键盘改变
+  var h = window.screen.availHeight || window.outerHeight || window.innerHeight;
+  phone.style.setProperty('height', h + 'px', 'important');
+  phone.style.setProperty('max-height', h + 'px', 'important');
+  phone.style.setProperty('min-height', h + 'px', 'important');
+}
+
+// ===== Keyboard Navigation =====
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+    e.preventDefault();
+    if (currentScreen < 8) navigateTo(currentScreen + 1);
+  } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+    e.preventDefault();
+    if (currentScreen > 0) navigateTo(currentScreen - 1);
+  } else if (e.key === 'Escape') {
+    navigateTo(0);
+  }
+});
+
+// ===== Touch Swipe =====
+let touchStartX = 0, touchStartY = 0;
+document.addEventListener('DOMContentLoaded', () => {
+  const container = document.getElementById('screensContainer');
+  if (!container) return;
+  container.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+  container.addEventListener('touchend', (e) => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+      if (dx < -30 && currentScreen < 8) navigateTo(currentScreen + 1);
+      else if (dx > 30 && currentScreen > 0) navigateTo(currentScreen - 1);
+    }
+  });
+});
+</script>
+</body>
+</html>
