@@ -65,11 +65,7 @@ window.APP_JSON_DATA = {
       ]
     },
     "s09": {
-      "menuItems": [
-        { "icon": "📄", "label": "我的查询记录", "action": "" },
-        { "icon": "📞", "label": "招生咨询预约", "action": "" },
-        { "icon": "⚙️", "label": "设置",         "action": "" }
-      ]
+      "menuItems": []
     }
   }
 };

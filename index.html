@@ -1310,13 +1310,13 @@ function renderS09(d) {
   const savedRank = localStorage.getItem('zk_last_rank') || '';
 
   return `<div style="padding-top:12px;">
-      <div class="typo-h2" style="margin-bottom:20px;">我的</div>
+      <div class="typo-h2" style="margin-bottom:20px;">中考咨询</div>
     </div>
     <div class="s09-profile">
       <div class="s09-avatar">🎓</div>
       <div>
-        <div class="s09-user-name">宣城中考志愿通</div>
-        <div class="s09-user-detail">宣州区高中录取查询工具</div>
+        <div class="s09-user-name">文杰教育 · 李老师</div>
+        <div class="s09-user-detail">宣州区中考志愿填报指导</div>
       </div>
     </div>
     <!-- 联系方式收集 -->
@@ -1332,9 +1332,9 @@ function renderS09(d) {
       <div class="form-group">
         <input class="form-input" type="text" placeholder="初中学校（选填）" id="contactSchool">
       </div>
-      <div class="form-row" style="gap:8px;">
-        <input class="form-input" type="number" placeholder="中考分数${savedScore ? '：'+savedScore : ''}" id="contactScore" style="flex:1;">
-        <input class="form-input" type="number" placeholder="区排名${savedRank ? '：'+savedRank : ''}" id="contactRank" style="flex:1;">
+      <div style="display:flex;gap:8px;margin-bottom:12px;">
+        <input class="form-input" type="number" placeholder="中考分数（选填）" id="contactScore" value="${savedScore}" style="flex:1;">
+        <input class="form-input" type="number" placeholder="区排名（选填）" id="contactRank" value="${savedRank}" style="flex:1;">
       </div>
       <button class="btn btn-accent" onclick="submitContact()">提交，进群咨询</button>
       <div class="typo-caption" style="margin-top:8px;text-align:center;" id="contactStatus"></div>
