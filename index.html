@@ -977,6 +977,7 @@ let APP_DATA = null;
 let currentDetailIdx = 0;
 
 async function loadData() {
+  try {
   // ===== 渠道追踪：从URL读取ref参数 =====
   const params = new URLSearchParams(window.location.search);
   const ref = params.get('ref') || params.get('source') || '';
