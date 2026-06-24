@@ -977,7 +977,17 @@ let APP_DATA = null;
 let currentDetailIdx = 0;
 
 async function loadData() {
-  try {
+  // ===== 渠道追踪：从URL读取ref参数 =====
+  const params = new URLSearchParams(window.location.search);
+  const ref = params.get('ref') || params.get('source') || '';
+  if (ref) {
+    currentRef = ref;
+    localStorage.setItem('zk_channel', ref);
+  } else {
+    currentRef = localStorage.getItem('zk_channel') || '';
+  }
+
+  // 加载数据
     if (!window.APP_JSON_DATA) throw new Error('data.js 未加载或数据为空');
 
     // 深拷贝静态配置
@@ -1088,6 +1098,7 @@ function renderS01(d) {
       <div class="s01-logo"><span>${a.name.charAt(0)}</span></div>
       <div class="s01-title">${a.name}</div>
       <div class="s01-subtitle">${a.subtitle}</div>
+      ${currentRef ? `<div style="margin-top:6px;font-size:11px;color:#7C3AED;background:#EEF2FF;display:inline-block;padding:2px 10px;border-radius:10px;">📌 ${currentRef} 推荐</div>` : ''}
     </div>
     <button class="btn btn-accent" onclick="navigateTo(1)">${s.cta}</button>
     <div style="margin-top:24px;">
@@ -1364,7 +1375,7 @@ function quickSubmitContact() {
   fetch('https://formspree.io/f/xaqgyqko', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name, phone, score: scr, rank: rnk, source: '结果页' })
+    body: JSON.stringify({ name, phone, score: scr, rank: rnk, ref: currentRef, source: '结果页' })
   }).then(() => {
     status.innerHTML = '✅ 已提交！<br>长按识别下方二维码进群，李老师在群里等你';
     status.style.color = 'var(--success)';
@@ -1397,7 +1408,7 @@ function submitContact() {
   fetch('https://formspree.io/f/xaqgyqko', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name, phone, school, score, rank, source: '我的页' })
+    body: JSON.stringify({ name, phone, school, score, rank, ref: currentRef, source: '我的页' })
   }).then(() => {
     status.innerHTML = '✅ 已提交！<br>长按识别下方二维码进群，李老师在群里等你';
     status.style.color = 'var(--success)';
@@ -1489,6 +1500,7 @@ function initApp() {
 // ===== 全局变量 =====
 const YOUR_PHONE = '';
 const YOUR_ORG = '文杰教育';
+let currentRef = ''; // 渠道追踪：从URL参数读取
 let currentScreen = 0;
 let transitioning = false;
 const SCREENS = ['s01','s02','s03','s04','s05','s06','s07','s08','s09'];

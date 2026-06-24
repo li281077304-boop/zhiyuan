@@ -17,7 +17,8 @@ window.APP_JSON_DATA = {
   ],
   "screens": {
     "s01": {
-      "cta": "立即查询 ›",
+          "cta": "立即查询 ›",
+          "refTag": "",
       "featureCards": [
         { "icon": "📊", "color": "purple", "title": "分数匹配学校",  "desc": "输入中考分数，自动匹配宣州区内高中", "animateClass": "delay-1" },
         { "icon": "🏫", "color": "orange", "title": "冲稳保推荐",    "desc": "根据往年录取线，科学划分冲刺/稳妥/保底", "animateClass": "delay-2" },
