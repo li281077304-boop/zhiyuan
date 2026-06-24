@@ -1099,7 +1099,7 @@ function renderS01(d) {
       <div class="s01-logo"><span>${a.name.charAt(0)}</span></div>
       <div class="s01-title">${a.name}</div>
       <div class="s01-subtitle">${a.subtitle}</div>
-      ${currentRef ? `<div style="margin-top:6px;font-size:11px;color:#7C3AED;background:#EEF2FF;display:inline-block;padding:2px 10px;border-radius:10px;">📌 ${currentRef} 推荐</div>` : ''}
+      <div style="margin-top:8px;font-size:11px;color:#666;background:#FEF3C7;display:inline-block;padding:4px 12px;border-radius:6px;">⚠️ 2025实考总分760分。基于往年数据预测，每晚24:00更新最新分数线</div>
     </div>
     <button class="btn btn-accent" onclick="navigateTo(1)">${s.cta}</button>
     <div style="margin-top:24px;">
@@ -1190,27 +1190,72 @@ function renderS06(d) {
     `<div class="s06-stat"><div class="s06-stat-val">${st.val}</div><div class="s06-stat-label">${st.label}</div></div>`
   ).join('');
 
+  let unlocked = window.zkUnlocked || false;
+
   let groupsHTML = s.groups.map((g, gi) => {
     let schoolCards = g.schools.map((sch, si) => {
-      let tags = sch.tags.map(t => `<span class="s06-tag s06-tag-${t.toLowerCase()}">${t}</span>`).join('');
       let globalIdx = gi * 100 + si;
-      return `<div class="s06-school-card" onclick="navigateToDet(${globalIdx})">
+      return `<div class="s06-school-card" onclick="${unlocked ? 'navigateToDet('+globalIdx+')' : ''}" style="${unlocked ? '' : 'cursor:default;'}">
         <div class="s06-school-rank ${g.type}">${sch.rank}</div>
         <div class="s06-school-info">
           <div class="s06-school-name">${sch.name}</div>
-          <div class="s06-school-tags">${tags}</div>
-          <div class="s06-school-major">${sch.major}</div>
-          <div class="s06-school-loc">${sch.location}</div>
+          <div class="s06-school-tags">${(sch.tags||[]).map(t=>'<span class=\"s06-tag\" style=\"background:#EEF2FF;color:#4F46E5;font-size:10px;\">'+t+'</span>').join('')}</div>
+          ${unlocked ? `<div class="s06-school-major">${sch.major||''}</div><div class="s06-school-loc">${sch.location||''}</div>` : ''}
         </div>
-        <div class="s06-school-rate"><div class="s06-rate-val">${sch.rate}</div><div class="s06-rate-label">录取率</div></div>
+        ${unlocked ? `<div class="s06-school-rate"><div class="s06-rate-val">${sch.rate}</div><div class="s06-rate-label">${g.type==='rush'?'差':''}${sch.rate||''}</div></div>` : `<div style="color:#94A3B8;font-size:12px;">🔒 解锁查看</div>`}
       </div>`;
     }).join('');
     return `<div class="s06-group-title">${g.title} <span class="s06-group-badge ${g.type}">${g.badgeLabel}</span></div>${schoolCards}`;
   }).join('');
 
+  let lockSection = '';
+  if (!unlocked) {
+    lockSection = `<div class="card" style="margin-top:20px;padding:0;overflow:hidden;border:1px solid #E2E8F0;background:#fff;">
+      <div style="background:linear-gradient(135deg,#4338CA,#6366F1);padding:20px 24px;color:#fff;">
+        <div style="font-size:18px;font-weight:700;margin-bottom:6px;">📋 获取专属报考方案</div>
+        <div style="font-size:13px;opacity:0.9;line-height:1.8;">
+          <div style="margin-bottom:2px;">① 一对一志愿填报指导，根据你的分数制定冲/稳/保方案</div>
+          <div style="margin-bottom:2px;">② 各科学情分析，明确优势科目与提升空间</div>
+          <div>③ 初升高衔接资料包，提前适应高中学习节奏</div>
+        </div>
+      </div>
+      <div style="padding:16px 24px;">
+        <div class="form-group">
+          <input class="form-input" type="text" placeholder="学生姓名" id="resultName" style="height:44px;font-size:14px;">
+        </div>
+        <div class="form-group">
+          <input class="form-input" type="tel" placeholder="手机号" id="resultPhone" style="height:44px;font-size:14px;">
+        </div>
+        <div class="form-group">
+          <input class="form-input" type="text" placeholder="初中学校（选填）" id="resultSchool" style="height:44px;font-size:14px;">
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:12px;">
+          <input class="form-input" type="number" placeholder="中考分数" id="resultScore" style="flex:1;height:44px;font-size:14px;" value="${window.zkLastScore || ''}">
+          <input class="form-input" type="number" placeholder="区排名" id="resultRank" style="flex:1;height:44px;font-size:14px;" value="${window.zkLastRank || ''}">
+        </div>
+        <button class="btn btn-accent" style="width:100%;height:46px;font-size:15px;font-weight:600;border-radius:10px;background:linear-gradient(135deg,#4F46E5,#7C3AED);" onclick="unlockReport()">提交，专属咨询老师将电话联系你</button>
+        <div style="font-size:11px;color:#999;text-align:center;margin-top:8px;" id="resultContactStatus"></div>
+      </div>
+    </div>`;
+  } else {
+    lockSection = `<div class="card" style="margin-top:20px;padding:0;overflow:hidden;border:1px solid #D1FAE5;background:#fff;">
+      <div style="background:linear-gradient(135deg,#059669,#10B981);padding:20px 24px;color:#fff;">
+        <div style="font-size:18px;font-weight:700;margin-bottom:6px;">✅ 方案已提交</div>
+        <div style="font-size:13px;opacity:0.9;line-height:1.8;">专属咨询老师将在24小时内电话联系你，请保持手机畅通</div>
+      </div>
+    </div>
+    <!-- 学科分析 -->
+    <div class="card" id="subjectAnalysis" style="margin-top:16px;">
+      <div class="typo-h3" style="margin-bottom:12px;">📊 各科成绩分析（选填）</div>
+      <div class="typo-caption" style="margin-bottom:12px;">输入各科成绩，立即查看学情分析与提升建议</div>
+      <div id="subjectInputs" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;"></div>
+      <button class="btn btn-accent" style="width:100%;height:44px;font-size:14px;margin-top:12px;border-radius:10px;" onclick="submitSubjects()">提交各科成绩</button>
+      <div id="subjectResult" style="margin-top:12px;font-size:13px;line-height:1.8;"></div>
+    </div>`;
+  }
+
   return `<div class="s06-header">
       <div class="typo-h2">查询结果</div>
-      <div class="s06-share" onclick="alert('分享功能开发中')">${s.shareLabel || '分享'}</div>
     </div>
     <div class="card-purple s06-summary">
       <div class="typo-h3" style="margin-bottom:4px;">${s.summary.title}</div>
@@ -1218,24 +1263,7 @@ function renderS06(d) {
       <div class="s06-summary-stats">${stats}</div>
     </div>
     ${groupsHTML}
-    <!-- 线索收集：在结果页底部留资 -->
-    <div class="card" style="margin-top:16px;background:linear-gradient(135deg,#EEF2FF,#fff);">
-      <div class="typo-label" style="margin-bottom:4px;">📞 想获取更精准的报考建议？</div>
-      <div class="typo-caption" style="margin-bottom:10px;">留下联系方式，李老师拉你进群一对一指导</div>
-      <div style="display:flex;flex-direction:column;gap:8px;">
-        <input class="form-input" type="text" placeholder="学生姓名" id="resultName" style="height:40px;font-size:13px;">
-        <div style="display:flex;gap:8px;">
-          <input class="form-input" type="tel" placeholder="手机号（必填）" id="resultPhone" style="flex:1;height:40px;font-size:13px;">
-          <button class="btn btn-accent" style="width:auto;padding:0 16px;height:40px;font-size:13px;" onclick="quickSubmitContact()">提交</button>
-        </div>
-        <div style="font-size:11px;color:#999;text-align:center;" id="resultAutoScore"></div>
-      </div>
-      <div class="typo-caption" style="margin-top:4px;font-size:11px;" id="resultContactStatus"></div>
-      <div style="text-align:center;padding:8px 0;">
-        <img src="/qrcode.jpg" style="width:200px;height:200px;border-radius:8px;border:1px solid #eee;" alt="扫码进群" onerror="this.style.display='none'">
-        <div style="font-size:12px;color:#666;margin-top:6px;">👆 长按识别二维码 · 文杰教育 李老师</div>
-      </div>
-    </div>
+    ${lockSection}
     <div style="height:80px;"></div>`;
 }
 
@@ -1261,7 +1289,12 @@ function renderS08(d) {
   let filters = s.filters.map(f =>
     `<div class="chip${f.selected?' selected':''}" onclick="toggleChip(this)">${f.label}</div>`
   ).join('');
-  let schools = window.XUANCHENG_SCHOOLS || [];
+  let schools = (window.XUANCHENG_SCHOOLS || []).filter(sch => {
+    const ad = sch.admission;
+    if (!ad || !Object.keys(ad).length) return false;
+    // 至少有一年有真正的分数
+    return Object.values(ad).some(y => y && typeof y.minScore === 'number');
+  });
   let schoolItems = schools.map(sch => {
     let rankClass = sch.type === '公办' ? 'stable' : 'safe';
     let tags = (sch.tags || []).map(t => `<span class="s06-tag" style="background:#EEF2FF;color:#4F46E5;font-size:10px;">${t}</span>`).join('');
@@ -1327,14 +1360,14 @@ function renderS09(d) {
     <div class="s09-profile">
       <div class="s09-avatar">🎓</div>
       <div>
-        <div class="s09-user-name">文杰教育 · 李老师</div>
-        <div class="s09-user-detail">宣州区中考志愿填报指导</div>
+        <div class="s09-user-name">宣城中考志愿通</div>
+        <div class="s09-user-detail">宣州区高中录取预测 · 每日更新</div>
       </div>
     </div>
     <!-- 联系方式收集 -->
     <div class="card" style="margin-bottom:16px;">
-      <div class="typo-label" style="margin-bottom:8px;">📞 文杰教育 · 中考咨询</div>
-      <div class="typo-caption" style="margin-bottom:12px;">留下联系方式，李老师拉你进群一对一指导</div>
+      <div class="typo-label" style="margin-bottom:8px;">📞 获取专属报考建议</div>
+      <div class="typo-caption" style="margin-bottom:12px;">留下联系方式，获取一对一中考志愿指导</div>
       <div class="form-group">
         <input class="form-input" type="text" placeholder="学生姓名（必填）" id="contactName" value="${savedName}">
       </div>
@@ -1348,41 +1381,57 @@ function renderS09(d) {
         <input class="form-input" type="number" placeholder="中考分数（选填）" id="contactScore" value="${savedScore}" style="flex:1;">
         <input class="form-input" type="number" placeholder="区排名（选填）" id="contactRank" value="${savedRank}" style="flex:1;">
       </div>
-      <button class="btn btn-accent" onclick="submitContact()">提交，进群咨询</button>
+      <button class="btn btn-accent" onclick="submitContact()">提交，专属咨询老师将电话联系你</button>
       <div class="typo-caption" style="margin-top:8px;text-align:center;" id="contactStatus"></div>
-      <div style="text-align:center;padding:8px 0;">
-        <img src="/qrcode.jpg" style="width:200px;height:200px;border-radius:8px;border:1px solid #eee;" alt="扫码进群" onerror="this.style.display='none'">
-        <div style="font-size:12px;color:#666;margin-top:6px;">👆 长按识别 · 文杰教育 李老师</div>
-      </div>
     </div>
     ${menuItems}
     <div style="height:80px;"></div>`;
 }
 
-// ===== 提交联系方式（结果页快捷版） =====
-function quickSubmitContact() {
+// ===== 解锁完整报告 =====
+function unlockReport() {
   const name = document.getElementById('resultName')?.value?.trim() || '';
   const phone = document.getElementById('resultPhone')?.value?.trim();
+  const school = document.getElementById('resultSchool')?.value?.trim() || '';
+  const score = parseInt(document.getElementById('resultScore')?.value) || 0;
+  const rank = parseInt(document.getElementById('resultRank')?.value) || 0;
   const status = document.getElementById('resultContactStatus');
+
   if (!phone || phone.length < 11) {
     status.textContent = '请输入正确的手机号';
     status.style.color = 'var(--danger)';
     return;
   }
+
+  // 分数合理性校验：排名与分数差距过大时提醒
+  if (score > 0 && rank > 0) {
+    // 根据历年数据：669分≈770名，594分≈2770名，432分≈5130名
+    // 粗略模型：每分约对应20-30名
+    let estimatedRank = Math.round((720 - score) * 35);
+    if (estimatedRank < 1) estimatedRank = 1;
+    let gap = Math.abs(rank - estimatedRank) / Math.max(rank, estimatedRank);
+    if (gap > 0.8) {
+      status.innerHTML = '⚠️ 你的分数与排名差距较大，请检查是否填错';
+      status.style.color = '#EA580C';
+      status.style.fontSize = '12px';
+      return;
+    }
+  }
+
   status.textContent = '提交中...';
   status.style.color = '#666';
-  const scr = window.zkLastScore || parseInt(localStorage.getItem('zk_last_score')) || 0;
-  const rnk = window.zkLastRank || parseInt(localStorage.getItem('zk_last_rank')) || 0;
   fetch('https://formspree.io/f/xaqgyqko', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name, phone, score: scr, rank: rnk, ref: currentRef, source: '结果页' })
+    body: JSON.stringify({ name, phone, school, score, rank, ref: currentRef, source: '解锁报告' })
   }).then(() => {
-    status.innerHTML = '✅ 已提交！<br>长按识别下方二维码进群，李老师在群里等你';
-    status.style.color = 'var(--success)';
+    window.zkUnlocked = true;
+    const s06 = document.getElementById('s06');
+    if (s06 && APP_DATA) { s06.innerHTML = renderScreen('s06', APP_DATA); setTimeout(renderSubjectInputs, 200); }
   }).catch(() => {
-    status.innerHTML = '✅ 已提交！<br>长按识别下方二维码进群，李老师在群里等你';
-    status.style.color = 'var(--success)';
+    window.zkUnlocked = true;
+    const s06 = document.getElementById('s06');
+    if (s06 && APP_DATA) { s06.innerHTML = renderScreen('s06', APP_DATA); setTimeout(renderSubjectInputs, 200); }
   });
 }
 
@@ -1392,6 +1441,56 @@ function showResultScoreHint() {
   if (!el) return;
   const scr = window.zkLastScore || parseInt(localStorage.getItem('zk_last_score')) || 0;
   if (scr) el.textContent = '已记录你的查询分数：' + scr + '分';
+}
+
+// ===== 学科分析：配置与函数 =====
+const SUBJECTS = [
+  { id: 'chinese', name: '语文', full: 150 },
+  { id: 'math',    name: '数学', full: 150 },
+  { id: 'english', name: '英语', full: 120 },
+  { id: 'physics', name: '物理', full: 70 },
+  { id: 'chem',    name: '化学', full: 40 },
+  { id: 'experiment', name: '理化实验', full: 20 },
+  { id: 'politics',name: '道法', full: 80 },
+  { id: 'history', name: '历史', full: 70 },
+  { id: 'pe',      name: '体育', full: 60 }
+];
+
+function renderSubjectInputs() {
+  const el = document.getElementById('subjectInputs');
+  if (!el) return;
+  el.innerHTML = SUBJECTS.map(s =>
+    `<div style="display:flex;align-items:center;gap:6px;padding:6px 10px;background:#F8FAFC;border-radius:8px;">
+      <span style="font-size:12px;color:#666;min-width:32px;">${s.name}</span>
+      <input type="number" id="subj_${s.id}" placeholder="0" max="${s.full}" style="flex:1;width:0;height:32px;font-size:13px;border:1px solid #E2E8F0;border-radius:6px;padding:0 8px;text-align:center;">
+      <span style="font-size:10px;color:#94A3B8;min-width:30px;">/${s.full}</span>
+    </div>`
+  ).join('');
+}
+
+function submitSubjects() {
+  const resultEl = document.getElementById('subjectResult');
+  let data = {};
+  let hasScore = false;
+  SUBJECTS.forEach(s => {
+    const v = parseInt(document.getElementById('subj_'+s.id)?.value);
+    if (v > 0) { data['subj_'+s.id] = v; hasScore = true; }
+  });
+  if (!hasScore) {
+    if (resultEl) resultEl.innerHTML = '<div style="color:#999;text-align:center;padding:8px;">请至少输入一科成绩</div>';
+    return;
+  }
+  data.ref = currentRef;
+  data.source = '各科成绩';
+  fetch('https://formspree.io/f/xaqgyqko', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  }).then(() => {
+    if (resultEl) resultEl.innerHTML = '<div style="color:#059669;text-align:center;padding:12px;background:#ECFDF5;border-radius:8px;font-size:13px;">✅ 成绩已提交，专属老师将根据各科情况为你制定提升方案</div>';
+  }).catch(() => {
+    if (resultEl) resultEl.innerHTML = '<div style="color:#059669;text-align:center;padding:12px;background:#ECFDF5;border-radius:8px;font-size:13px;">✅ 成绩已提交，专属老师将根据各科情况为你制定提升方案</div>';
+  });
 }
 
 // ===== 提交联系方式（我的页完整版） =====
@@ -1411,10 +1510,10 @@ function submitContact() {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ name, phone, school, score, rank, ref: currentRef, source: '我的页' })
   }).then(() => {
-    status.innerHTML = '✅ 已提交！<br>长按识别下方二维码进群，李老师在群里等你';
+    status.innerHTML = '✅ 已提交！<br>长按识别下方二维码进群咨询';
     status.style.color = 'var(--success)';
   }).catch(() => {
-    status.innerHTML = '✅ 已提交！<br>长按识别下方二维码进群，李老师在群里等你';
+    status.innerHTML = '✅ 已提交！<br>长按识别下方二维码进群咨询';
     status.style.color = 'var(--success)';
   });
 }
