@@ -1420,7 +1420,7 @@ function unlockReport() {
 
   status.textContent = '提交中...';
   status.style.color = '#666';
-  fetch('https://formspree.io/f/xaqgyqko', {
+  fetch('https://script.google.com/macros/s/AKfycbx5sVr_xr1xYNcooxCfuadqD3LhvVuTarz_cYZERmSWASCrP_ESb33Zl2n_8NaBgcs/exec', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ name, phone, school, score, rank, ref: currentRef, source: '解锁报告' })
@@ -1482,7 +1482,7 @@ function submitSubjects() {
   }
   data.ref = currentRef;
   data.source = '各科成绩';
-  fetch('https://formspree.io/f/xaqgyqko', {
+  fetch('https://script.google.com/macros/s/AKfycbx5sVr_xr1xYNcooxCfuadqD3LhvVuTarz_cYZERmSWASCrP_ESb33Zl2n_8NaBgcs/exec', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data)
@@ -1505,7 +1505,7 @@ function submitContact() {
   if (!phone || phone.length < 11) { status.textContent = '请输入正确的手机号'; status.style.color = 'var(--danger)'; return; }
   status.textContent = '提交中...';
   status.style.color = '#666';
-  fetch('https://formspree.io/f/xaqgyqko', {
+  fetch('https://script.google.com/macros/s/AKfycbx5sVr_xr1xYNcooxCfuadqD3LhvVuTarz_cYZERmSWASCrP_ESb33Zl2n_8NaBgcs/exec', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ name, phone, school, score, rank, ref: currentRef, source: '我的页' })
