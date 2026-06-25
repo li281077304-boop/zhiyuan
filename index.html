@@ -1422,9 +1422,10 @@ function unlockReport() {
   status.style.color = '#666';
   fetch('https://script.google.com/macros/s/AKfycbx5sVr_xr1xYNcooxCfuadqD3LhvVuTarz_cYZERmSWASCrP_ESb33Zl2n_8NaBgcs/exec', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ name, phone, school, score, rank, ref: currentRef, source: '解锁报告' })
   }).then(() => {
+    // 同时备份到 Formspree
+    fetch('https://formspree.io/f/xaqgyqko',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,phone,school,score,rank,ref:currentRef,source:'解锁报告'})}).catch(()=>{});
     window.zkUnlocked = true;
     const s06 = document.getElementById('s06');
     if (s06 && APP_DATA) { s06.innerHTML = renderScreen('s06', APP_DATA); setTimeout(renderSubjectInputs, 200); }
@@ -1484,11 +1485,12 @@ function submitSubjects() {
   data.source = '各科成绩';
   fetch('https://script.google.com/macros/s/AKfycbx5sVr_xr1xYNcooxCfuadqD3LhvVuTarz_cYZERmSWASCrP_ESb33Zl2n_8NaBgcs/exec', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data)
   }).then(() => {
+    fetch('https://formspree.io/f/xaqgyqko',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).catch(()=>{});
     if (resultEl) resultEl.innerHTML = '<div style="color:#059669;text-align:center;padding:12px;background:#ECFDF5;border-radius:8px;font-size:13px;">✅ 成绩已提交，专属老师将根据各科情况为你制定提升方案</div>';
   }).catch(() => {
+    fetch('https://formspree.io/f/xaqgyqko',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).catch(()=>{});
     if (resultEl) resultEl.innerHTML = '<div style="color:#059669;text-align:center;padding:12px;background:#ECFDF5;border-radius:8px;font-size:13px;">✅ 成绩已提交，专属老师将根据各科情况为你制定提升方案</div>';
   });
 }
@@ -1507,13 +1509,14 @@ function submitContact() {
   status.style.color = '#666';
   fetch('https://script.google.com/macros/s/AKfycbx5sVr_xr1xYNcooxCfuadqD3LhvVuTarz_cYZERmSWASCrP_ESb33Zl2n_8NaBgcs/exec', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ name, phone, school, score, rank, ref: currentRef, source: '我的页' })
   }).then(() => {
-    status.innerHTML = '✅ 已提交！<br>长按识别下方二维码进群咨询';
+    fetch('https://formspree.io/f/xaqgyqko',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,phone,school,score,rank,ref:currentRef,source:'我的页'})}).catch(()=>{});
+    status.innerHTML = '✅ 已提交！专属咨询老师将电话联系你';
     status.style.color = 'var(--success)';
   }).catch(() => {
-    status.innerHTML = '✅ 已提交！<br>长按识别下方二维码进群咨询';
+    fetch('https://formspree.io/f/xaqgyqko',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,phone,school,score,rank,ref:currentRef,source:'我的页'})}).catch(()=>{});
+    status.innerHTML = '✅ 已提交！专属咨询老师将电话联系你';
     status.style.color = 'var(--success)';
   });
 }
