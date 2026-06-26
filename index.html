@@ -1099,7 +1099,8 @@ function renderS01(d) {
       <div class="s01-logo"><span>${a.name.charAt(0)}</span></div>
       <div class="s01-title">${a.name}</div>
       <div class="s01-subtitle">${a.subtitle}</div>
-      <div style="margin-top:8px;font-size:11px;color:#666;background:#FEF3C7;display:inline-block;padding:4px 12px;border-radius:6px;">⚠️ 基于2026年最新分档表（6870名考生）AI预测。官方分数线公布后校准</div>
+            <div style="margin:12px 0;padding:10px 16px;background:#FEF2F2;border:2px solid #EF4444;border-radius:8px;text-align:center;font-size:14px;font-weight:700;color:#DC2626;">⚠️ AI预测 · 仅供参考 · 非官方数据</div>
+            <div style="margin-top:8px;font-size:11px;color:#666;background:#FEF3C7;display:inline-block;padding:4px 12px;border-radius:6px;">⚠️ 基于2026年最新分档表（6870名考生）AI预测。官方分数线公布后校准</div>
     </div>
     <button class="btn btn-accent" onclick="navigateTo(1)">${s.cta}</button>
     <div style="margin-top:24px;">
@@ -1307,7 +1308,7 @@ function renderS08(d) {
       </div>
       <div class="s06-school-rate">
         <div class="s06-rate-val">${sch.admission?.['2026']?.minScore || sch.admission?.['2025']?.minScore || '—'}</div>
-                <div class="s06-rate-label">2026预测线</div>
+                <div class="s06-rate-label">2026预测线<sup style="color:#EF4444;font-size:10px;">*仅供参考</sup></div>
       </div>
     </div>`;
   }).join('');
@@ -1870,7 +1871,7 @@ function buildResultData(matched, score) {
     shareLabel: '分享',
     summary: {
       title: '你的分数：' + score + ' 分',
-      rate: '基于2026年分档表AI预测（6870名考生）',
+      rate: '基于2026年分档表AI预测（6870名考生）⚠️仅供参考',,
       stats: [
         { val: groups.reduce((s,g) => s + g.schools.length, 0), label: '匹配学校' },
         { val: (groups.find(g => g.type === 'rush')?.schools?.length || 0), label: '冲刺' },
