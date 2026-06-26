@@ -26,6 +26,9 @@ if [ -z "$WPS" ]; then
     exit 1
 fi
 
+# 找续推数据
+RENEW=$(ls -t 2026年度续费*.xlsx 2>/dev/null | head -1)
+
 # 找上一周的底稿（文件包含指定周次）
 PREV=$((WEEK - 1))
 BASE=$(ls "数学组数据统计表-宣城二校6月第${PREV}周"*.xls 2>/dev/null | head -1)
@@ -45,7 +48,7 @@ echo "📂 WPS:  $WPS"
 echo "🎯 第${WEEK}周"
 echo ""
 
-python3 auto_weekly.py "$BASE" "$SCHED" "$WPS" "$WEEK"
+python3 auto_weekly.py "$BASE" "$SCHED" "$WPS" "$WEEK" "$RENEW"
 
 # 如果文件生成了，打开它
 OUT="数学组数据统计表-宣城二校6月第${WEEK}周.xls"

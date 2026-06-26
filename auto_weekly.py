@@ -180,7 +180,7 @@ def parse_schedule(filepath, week):
 
 # ═══════════════ 填数据 ═══════════════
 
-def fill(base_file, wps, schedule_data, special_data, week, output_file):
+def fill(base_file, wps, schedule_data, special_data, week, output_file, renewal_file=None):
     rb = xlrd.open_workbook(base_file, formatting_info=True)
     wb = xl_copy(rb)
 
@@ -434,6 +434,29 @@ def fill(base_file, wps, schedule_data, special_data, week, output_file):
             ws_gp.write(r, 17, Rv if Rv else None)
             ws_gp.write(r, 18, Sv if Sv else None)
 
+    # ── 导入续推数据 ──
+    if renewal_file and os.path.exists(renewal_file):
+        try:
+            from openpyxl import load_workbook as _load
+            import shutil, tempfile as _tf
+            _tmp = os.path.join(_tf.gettempdir(), f'renew_{os.getpid()}.xlsx')
+            shutil.copy(renewal_file, _tmp)
+            _rwb = _load(_tmp, data_only=True)
+            _rws = _rwb.active
+            _rows = [[_rws.cell(r,c).value for c in range(1, _rws.max_column+1)]
+                     for r in range(1, _rws.max_row+1)]
+            if '续推数据' in wb.sheetnames:
+                _dst = wb['续推数据']
+                for r in range(1, _dst.max_row+1):
+                    for c in range(1, _dst.max_column+1):
+                        _dst.cell(r,c).value = None
+                for ri, row in enumerate(_rows):
+                    for ci, val in enumerate(row):
+                        _dst.cell(ri+1, ci+1, value=val)
+                print(f'  ✅ 续推数据已导入: {len(_rows)}行')
+        except Exception as e:
+            print(f'  ⚠️ 续推导入失败: {e}')
+
     wb.save(output_file)
 
     # ── 自恰 + 交叉验证 ──
@@ -461,15 +484,20 @@ def fill(base_file, wps, schedule_data, special_data, week, output_file):
 # ═══════════════ main ═══════════════
 def main():
     if len(sys.argv) < 4:
-        print('用法: python3 auto_weekly.py <模板.xls> <排课.xls> <WPS.xls> [周次]')
+        print('用法: python3 auto_weekly.py <模板.xls> <排课.xls> <WPS.xls> [周次] [续推.xlsx]')
         sys.exit(1)
 
     base = sys.argv[1]; sched = sys.argv[2]; wps = sys.argv[3]
-    week = int(sys.argv[4]) if len(sys.argv) > 4 else 3
+    week = int(sys.argv[4]) if len(sys.argv) > 4 and sys.argv[4].isdigit() else 3
+    renewal = None
+    for a in sys.argv[4:]:
+        if a.endswith(('.xls','.xlsx')) and a != base and a != sched and a != wps:
+            renewal = a
 
     print(f'📂 底稿: {os.path.basename(base)}')
     print(f'📂 排课: {os.path.basename(sched)}')
     print(f'📂 WPS:  {os.path.basename(wps)}')
+    if renewal: print(f'📂 续推: {os.path.basename(renewal)}')
     print(f'🎯 第{week}周\n')
 
     wk_data = read_wps(wps, week)
@@ -480,7 +508,7 @@ def main():
     out = os.path.join(os.path.dirname(base) or '.',
                        f'数学组数据统计表-宣城二校{month}第{week}周.xls')
 
-    fill(base, wk_data, sch_data, sp_data, week, out)
+    fill(base, wk_data, sch_data, sp_data, week, out, renewal)
     print(f'\n✅ {os.path.basename(out)}')
 
 
