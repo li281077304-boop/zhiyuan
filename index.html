@@ -1099,7 +1099,7 @@ function renderS01(d) {
       <div class="s01-logo"><span>${a.name.charAt(0)}</span></div>
       <div class="s01-title">${a.name}</div>
       <div class="s01-subtitle">${a.subtitle}</div>
-      <div style="margin-top:8px;font-size:11px;color:#666;background:#FEF3C7;display:inline-block;padding:4px 12px;border-radius:6px;">⚠️ 基于2025年录取数据供参考。2026分档表公布后24小时内更新，敬请关注</div>
+      <div style="margin-top:8px;font-size:11px;color:#666;background:#FEF3C7;display:inline-block;padding:4px 12px;border-radius:6px;">⚠️ 基于2026年最新分档表（6870名考生）AI预测。官方分数线公布后校准</div>
     </div>
     <button class="btn btn-accent" onclick="navigateTo(1)">${s.cta}</button>
     <div style="margin-top:24px;">
@@ -1306,8 +1306,8 @@ function renderS08(d) {
         <div class="s06-school-tags">${tags}</div>
       </div>
       <div class="s06-school-rate">
-        <div class="s06-rate-val">${sch.admission?.['2025']?.minScore || sch.admission?.['2024']?.minScore || '—'}</div>
-        <div class="s06-rate-label">2025统招线</div>
+        <div class="s06-rate-val">${sch.admission?.['2026']?.minScore || sch.admission?.['2025']?.minScore || '—'}</div>
+                <div class="s06-rate-label">2026预测线</div>
       </div>
     </div>`;
   }).join('');
@@ -1829,8 +1829,8 @@ function buildResultData(matched, score) {
     if (items.length === 0) return;
     const schoolCards = items.map((item, idx) => {
       const sch = item.school;
-      const ad2025 = sch.admission && sch.admission["2025"];
-      const ad = ad2025 || (sch.admission ? sch.admission[Object.keys(sch.admission)[0]] : null);
+      const ad2026 = sch.admission && sch.admission["2026"];
+            const ad = ad2026 || (sch.admission ? sch.admission[Object.keys(sch.admission)[0]] : null);
       const minScore = ad ? ad.minScore : '—';
       const planCount = ad ? ad.planCount : '—';
       const rank = ad ? ad.rank : null;
@@ -1850,9 +1850,9 @@ function buildResultData(matched, score) {
           tuition: '',
           duration: '3年',
           reasons: [
-            { type: 'score', title: '📊 2025年录取线', desc: ad2025 ? '2025年统招线 ' + ad2025.minScore + ' 分，区排名' + ad2025.rank + ' 名。你的分数 ' + (diff >= 0 ? '超线 ' + diff + ' 分' : '差 ' + Math.abs(diff) + ' 分') : '' },
+            { type: 'score', title: '📊 2026年预测线', desc: ad2026 ? '2026年预测线 ' + ad2026.minScore + ' 分，区排名' + ad2026.rank + ' 名。你的分数 ' + (diff >= 0 ? '超线 ' + diff + ' 分' : '差 ' + Math.abs(diff) + ' 分') : '' },
             { type: 'match', title: '🏫 学校介绍', desc: sch.description || '' },
-            { type: 'trend', title: '📈 五年趋势', desc: '分数线趋势：2021→' + (sch.admission?.["2021"]?.minScore || '—') + ' 2022→' + (sch.admission?.["2022"]?.minScore || '—') + ' 2023→' + (sch.admission?.["2023"]?.minScore || '—') + ' 2024→' + (sch.admission?.["2024"]?.minScore || '—') + ' 2025→' + (ad2025?.minScore || '—') }
+            { type: 'trend', title: '📈 五年趋势', desc: '分数线趋势：2021→' + (sch.admission?.["2021"]?.minScore || '—') + ' 2022→' + (sch.admission?.["2022"]?.minScore || '—') + ' 2023→' + (sch.admission?.["2023"]?.minScore || '—') + ' 2024→' + (sch.admission?.["2024"]?.minScore || '—') + ' 2025→' + (sch.admission?.["2025"]?.minScore || '—') + ' 2026→' + (sch.admission?.["2026"]?.minScore || '—') }
           ],
           warning: diff < 0 ? '⚠️ 低于去年录取线，建议同时考虑保底学校' : '✅ 你的分数在往年录取范围内'
         }
@@ -1870,7 +1870,7 @@ function buildResultData(matched, score) {
     shareLabel: '分享',
     summary: {
       title: '你的分数：' + score + ' 分',
-      rate: '基于2025年宣州区高中录取数据（2026分档表公布后更新）',
+      rate: '基于2026年分档表AI预测（6870名考生）',
       stats: [
         { val: groups.reduce((s,g) => s + g.schools.length, 0), label: '匹配学校' },
         { val: (groups.find(g => g.type === 'rush')?.schools?.length || 0), label: '冲刺' },
@@ -1950,12 +1950,12 @@ function _resetSteps2() {
 function showSchoolDetail(name) {
   const school = window.XUANCHENG_SCHOOLS?.find(s => s.name === name);
   if (!school) return;
-  const ad = school.admission?.["2025"] || school.admission?.["2024"];
+  const ad = school.admission?.["2026"] || school.admission?.["2025"];
   const detailCard = document.getElementById('s07DetailCard');
   if (!detailCard) return;
 
   // Build admission history table
-  const years = ['2025','2024','2023','2022','2021'];
+  const years = ['2026','2025','2024','2023','2022','2021'];
   let adRows = '';
   years.forEach(y => {
     const d = school.admission?.[y];
@@ -2009,7 +2009,7 @@ function showSchoolDetail(name) {
 
     ${ad ? `
     <div style="margin-top:12px;padding:10px;background:linear-gradient(135deg,#EEF2FF,#fff);border-radius:8px;font-size:13px;">
-      <strong>💡 2025年报考参考</strong><br>
+      <strong>💡 2026年报考参考</strong><br>
       统招线：<strong style="color:#4F46E5;">${ad.minScore}分</strong>
       ${ad.rank ? ' · 区排名约 <strong>' + ad.rank + '名</strong>' : ''}
       ${ad.planCount ? ' · 招生计划约 <strong>' + ad.planCount + '人</strong>' : ''}
