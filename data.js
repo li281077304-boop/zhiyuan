@@ -85,7 +85,7 @@ window.XUANCHENG_SCHOOLS = [
     "phone": "",
     "tags": ["省示范", "重点", "百年名校"],
     "admission": {
-          "2026": { "minScore": 685, "rank": 777, "planCount": 950, "note": "预测线" },
+          "2026": { "minScore": 681, "rank": 900, "planCount": 1000, "note": "预测线" },
           "2025": { "minScore": 669, "rank": 771, "planCount": 950, "note": "统招线" },
       "2024": { "minScore": 669, "rank": 1063, "planCount": 920, "note": "统招线" },
       "2023": { "minScore": 681, "rank": 697, "planCount": 900, "note": "统招线" },
@@ -105,7 +105,7 @@ window.XUANCHENG_SCHOOLS = [
         "phone": "",
         "tags": ["省示范", "老牌名校"],
         "admission": {
-          "2026": { "minScore": 625, "rank": 2100, "planCount": 850, "note": "预测线" },
+          "2026": { "minScore": 636, "rank": 2350, "planCount": 900, "note": "预测线" },
           "2025": { "minScore": 594, "rank": 2770, "planCount": 850, "note": "统招线" },
       "2024": { "minScore": 650, "rank": 1754, "planCount": 830, "note": "统招线" },
       "2023": { "minScore": 655, "rank": 1668, "planCount": 810, "note": "统招线" },
@@ -125,7 +125,7 @@ window.XUANCHENG_SCHOOLS = [
         "phone": "",
         "tags": ["实验学校", "十五年一贯制"],
         "admission": {
-          "2026": { "minScore": 638, "rank": 1950, "planCount": 400, "note": "预测线" },
+          "2026": { "minScore": 644, "rank": 2100, "planCount": 400, "note": "预测线" },
           "2025": { "minScore": 597, "rank": 2708, "planCount": 400, "note": "统招线" },
       "2024": { "minScore": 627, "rank": 2563, "planCount": 380, "note": "统招线" },
       "2023": { "minScore": 631, "rank": 2567, "planCount": 350, "note": "统招线" },
@@ -185,11 +185,11 @@ window.XUANCHENG_SCHOOLS = [
         "phone": "",
         "tags": ["市示范", "艺术特色"],
         "admission": {
-          "2026": { "minScore": 520, "rank": 4500, "planCount": 600, "note": "预测线" },
-          "2025": { "minScore": 432, "rank": 5130, "planCount": 600, "note": "统招线" },
-      "2024": { "minScore": 536, "rank": 4761, "planCount": 580, "note": "统招线" },
-      "2023": { "minScore": 560, "rank": 4397, "planCount": 560, "note": "统招线" },
-      "2022": { "minScore": 563, "rank": 4427, "planCount": 540, "note": "统招线" },
+          "2026": { "minScore": 510, "rank": 4900, "planCount": 750, "note": "预测线" },
+                "2025": { "minScore": 432, "rank": 5130, "planCount": 600, "note": "统招线" },
+                "2024": { "minScore": 536, "rank": 4761, "planCount": 580, "note": "统招线" },
+                "2023": { "minScore": 560, "rank": 4397, "planCount": 560, "note": "统招线" },
+                "2022": { "minScore": 563, "rank": 4427, "planCount": 540, "note": "统招线" },
       "2021": { "minScore": 533, "rank": 4023, "planCount": 520, "note": "统招线" }
     },
     "description": "宣城市示范高中，创建于1973年，原名城关初中。2008年与市五中、七中合并迁至现址（宣城职业技术学院北校区），形成占地105亩的完全中学。现有57个教学班，在校学生2706人，教职工207人，其中高级教师41人。开设艺术特长班和楚英体育俱乐部，2020年加盟合肥六中卫星同步课堂。荣获全国特色学校、国防教育示范学校等国家级荣誉，多次被评为区、市级文明单位。校训：厚德、励志、和谐、特色。",
