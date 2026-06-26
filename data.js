@@ -145,7 +145,7 @@ window.XUANCHENG_SCHOOLS = [
         "phone": "",
         "tags": ["民办", "外语特色"],
         "admission": {
-          "2026": { "minScore": 570, "rank": 3900, "planCount": 350, "note": "预测线" },
+          "2026": { "minScore": 482, "rank": 4700, "planCount": 350, "note": "预测线" },
           "2025": { "minScore": 538, "rank": 3903, "planCount": 350, "note": "统招线" },
       "2024": { "minScore": 608, "rank": 3149, "planCount": 330, "note": "统招线" },
       "2023": { "minScore": 605, "rank": 3380, "planCount": 310, "note": "统招线" },
@@ -165,7 +165,7 @@ window.XUANCHENG_SCHOOLS = [
         "phone": "",
         "tags": ["民办", "寄宿制"],
         "admission": {
-          "2026": { "minScore": 540, "rank": 4000, "planCount": 750, "note": "预测线" },
+          "2026": { "minScore": 452, "rank": 5200, "planCount": 750, "note": "预测线" },
           "2025": { "minScore": 493, "rank": 4528, "planCount": 400, "note": "统招线" },
       "2024": { "minScore": 545, "rank": 4614, "planCount": 380, "note": "统招线" },
       "2023": { "minScore": 599, "rank": 3537, "planCount": 350, "note": "统招线" },
@@ -185,7 +185,7 @@ window.XUANCHENG_SCHOOLS = [
         "phone": "",
         "tags": ["市示范", "艺术特色"],
         "admission": {
-          "2026": { "minScore": 510, "rank": 4900, "planCount": 550, "note": "预测线" },
+          "2026": { "minScore": 416, "rank": 6000, "planCount": 550, "note": "预测线" },
                 "2025": { "minScore": 432, "rank": 5130, "planCount": 600, "note": "统招线" },
                 "2024": { "minScore": 536, "rank": 4761, "planCount": 580, "note": "统招线" },
                 "2023": { "minScore": 560, "rank": 4397, "planCount": 560, "note": "统招线" },
