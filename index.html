@@ -1099,7 +1099,7 @@ function renderS01(d) {
       <div class="s01-logo"><span>${a.name.charAt(0)}</span></div>
       <div class="s01-title">${a.name}</div>
       <div class="s01-subtitle">${a.subtitle}</div>
-      <div style="margin-top:8px;font-size:11px;color:#666;background:#FEF3C7;display:inline-block;padding:4px 12px;border-radius:6px;">⚠️ 2025实考总分760分。基于往年数据预测，每晚24:00更新最新分数线</div>
+      <div style="margin-top:8px;font-size:11px;color:#666;background:#FEF3C7;display:inline-block;padding:4px 12px;border-radius:6px;">⚠️ 基于2025年录取数据供参考。2026分档表公布后24小时内更新，敬请关注</div>
     </div>
     <button class="btn btn-accent" onclick="navigateTo(1)">${s.cta}</button>
     <div style="margin-top:24px;">
@@ -1870,7 +1870,7 @@ function buildResultData(matched, score) {
     shareLabel: '分享',
     summary: {
       title: '你的分数：' + score + ' 分',
-      rate: '基于2025年宣州区高中录取数据（含近5年趋势）',
+      rate: '基于2025年宣州区高中录取数据（2026分档表公布后更新）',
       stats: [
         { val: groups.reduce((s,g) => s + g.schools.length, 0), label: '匹配学校' },
         { val: (groups.find(g => g.type === 'rush')?.schools?.length || 0), label: '冲刺' },
