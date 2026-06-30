@@ -464,14 +464,23 @@ def fill(base_file, wps, schedule_data, special_data, week, output_file, renewal
                 for ci in range(20):
                     if ci not in (8, 14, 18, 19):  # 数据列
                         _dst.write(ri, ci, '')
-            # 只写数据列，不动公式列(合计/总计)
+            # 只写数据列，合计列手动算（公式不复制到.xls）
             for ri, row in enumerate(_rows):
                 for ci in range(min(len(row), 20)):
-                    if ci in (8, 14, 18, 19):  # 合计/总计=公式列
+                    if ci in (8, 14, 18, 19):
                         continue
                     val = row[ci]
                     if val is not None:
                         _dst.write(ri, ci, val)
+                # 合计列手动算
+                _v1sum = sum(sf(row[c]) for c in range(3,8) if c < len(row))
+                _bksum = sum(sf(row[c]) for c in range(9,14) if c < len(row))
+                _fsum = sum(sf(row[c]) for c in range(15,18) if c < len(row))
+                _dst.write(ri, 8, _v1sum if _v1sum else '')       # 1v1合计
+                _dst.write(ri, 14, _bksum if _bksum else '')      # 班课合计
+                _dst.write(ri, 18, _fsum if _fsum else '')        # 小班合计
+                _t = _v1sum + (_bksum + _fsum) * 1.5
+                _dst.write(ri, 19, _t if _t else '')              # 总计
             print(f'  ✅ 续推数据已导入: {len(_rows)}行 ({_rws.title})')
         except Exception as e:
             print(f'  ⚠️ 续推导入失败: {e}')
