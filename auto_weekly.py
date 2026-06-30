@@ -437,23 +437,38 @@ def fill(base_file, wps, schedule_data, special_data, week, output_file, renewal
     # ── 导入续推数据 ──
     if renewal_file and os.path.exists(renewal_file):
         try:
-            from openpyxl import load_workbook as _load
-            import shutil, tempfile as _tf
-            _tmp = os.path.join(_tf.gettempdir(), f'renew_{os.getpid()}.xlsx')
+            # 读源文件
+            _tmp = os.path.join(tempfile.gettempdir(), f'renew_{os.getpid()}.xlsx')
             shutil.copy(renewal_file, _tmp)
-            _rwb = _load(_tmp, data_only=True)
-            _rws = _rwb.active
-            _rows = [[_rws.cell(r,c).value for c in range(1, _rws.max_column+1)]
-                     for r in range(1, _rws.max_row+1)]
-            if '续推数据' in wb.sheetnames:
-                _dst = wb['续推数据']
-                for r in range(1, _dst.max_row+1):
-                    for c in range(1, _dst.max_column+1):
-                        _dst.cell(r,c).value = None
-                for ri, row in enumerate(_rows):
-                    for ci, val in enumerate(row):
-                        _dst.cell(ri+1, ci+1, value=val)
-                print(f'  ✅ 续推数据已导入: {len(_rows)}行')
+            _rwb = load_workbook(_tmp, data_only=True)
+            _sn = [s for s in _rwb.sheetnames if '6月' in s or '六' in s]
+            if not _sn: _sn = [s for s in _rwb.sheetnames if s not in ('Sheet','Sheet1')]
+            _rws = _rwb[_sn[0]] if _sn else _rwb.active
+            
+            # 获取源数据行
+            _rows = []
+            for r in range(1, _rws.max_row + 1):
+                row = []
+                empty = True
+                for c in range(1, _rws.max_column + 1):
+                    v = _rws.cell(r, c).value
+                    if v is not None: empty = False
+                    row.append(v)
+                if not empty:
+                    _rows.append(row)
+            
+            # 写到输出（续推数据 sheet 在底稿中存在）
+            _dst = wb.get_sheet('续推数据')
+            # 清空
+            for r in range(min(len(_rows), 60)):
+                for c in range(min(len(_rows[r]) if r < len(_rows) else 0, 25)):
+                    _dst.write(r, c, '')
+            # 写入
+            for ri, row in enumerate(_rows):
+                for ci, val in enumerate(row):
+                    if val is not None:
+                        _dst.write(ri, ci, val)
+            print(f'  ✅ 续推数据已导入: {len(_rows)}行 ({_rws.title})')
         except Exception as e:
             print(f'  ⚠️ 续推导入失败: {e}')
 
