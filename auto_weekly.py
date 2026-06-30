@@ -459,13 +459,17 @@ def fill(base_file, wps, schedule_data, special_data, week, output_file, renewal
             
             # 写到输出（续推数据 sheet 在底稿中存在）
             _dst = wb.get_sheet('续推数据')
-            # 清空
-            for r in range(min(len(_rows), 60)):
-                for c in range(min(len(_rows[r]) if r < len(_rows) else 0, 25)):
-                    _dst.write(r, c, '')
-            # 写入
+            # 先清空所有数据列（保留公式列）
+            for ri in range(60):
+                for ci in range(20):
+                    if ci not in (8, 14, 18, 19):  # 数据列
+                        _dst.write(ri, ci, '')
+            # 只写数据列，不动公式列(合计/总计)
             for ri, row in enumerate(_rows):
-                for ci, val in enumerate(row):
+                for ci in range(min(len(row), 20)):
+                    if ci in (8, 14, 18, 19):  # 合计/总计=公式列
+                        continue
+                    val = row[ci]
                     if val is not None:
                         _dst.write(ri, ci, val)
             print(f'  ✅ 续推数据已导入: {len(_rows)}行 ({_rws.title})')
