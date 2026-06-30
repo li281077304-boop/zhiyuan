@@ -1015,6 +1015,8 @@ async function loadData() {
 
     document.getElementById('loadingOverlay').style.display = 'none';
     initApp();
+    trackEvent('visit_home', { isNewVisitor: !localStorage.getItem('zk_seen_before') });
+    localStorage.setItem('zk_seen_before', '1');
   } catch (err) {
     console.error('数据加载失败:', err);
     document.getElementById('loadingOverlay').style.display = 'none';
@@ -1102,7 +1104,7 @@ function renderS01(d) {
             <div style="margin:12px 0;padding:10px 16px;background:#FEF2F2;border:2px solid #EF4444;border-radius:8px;text-align:center;font-size:14px;font-weight:700;color:#DC2626;">⚠️ AI预测 · 仅供参考 · 非官方数据</div>
             <div style="margin-top:8px;font-size:11px;color:#666;background:#FEF3C7;display:inline-block;padding:4px 12px;border-radius:6px;">⚠️ 基于2026年最新分档表（6870名考生）AI预测。官方分数线公布后校准</div>
     </div>
-    <button class="btn btn-accent" onclick="navigateTo(1)">${s.cta}</button>
+    <button class="btn btn-accent" onclick="trackEvent('click_start', {from: 'home_cta'}); navigateTo(1)">${s.cta}</button>
     <div style="margin-top:24px;">
       <div class="typo-label" style="margin-bottom:10px;">核心功能</div>
       ${cards}
@@ -1391,6 +1393,7 @@ function renderS09(d) {
 
 // ===== 解锁完整报告 =====
 function unlockReport() {
+  trackEvent('click_receive_material', { from: 'result_unlock_card' });
   const name = document.getElementById('resultName')?.value?.trim() || '';
   const phone = document.getElementById('resultPhone')?.value?.trim();
   const school = document.getElementById('resultSchool')?.value?.trim() || '';
@@ -1421,12 +1424,13 @@ function unlockReport() {
 
   status.textContent = '提交中...';
   status.style.color = '#666';
-  fetch('https://script.google.com/macros/s/AKfycbx5sVr_xr1xYNcooxCfuadqD3LhvVuTarz_cYZERmSWASCrP_ESb33Zl2n_8NaBgcs/exec', {
+  trackEvent('submit_phone', { from: '解锁报告', score, rank, hasSchool: !!school });
+  fetch(GOOGLE_SCRIPT_URL, {
     method: 'POST',
-    body: JSON.stringify({ name, phone, school, score, rank, ref: currentRef, source: '解锁报告' })
+    body: JSON.stringify({ type:'lead', name, phone, school, score, rank, ref: currentRef, source: '解锁报告', visitorId: getVisitorId(), sessionId: getSessionId(), lastPage: SCREEN_NAMES[currentScreen] || '分析结果' })
   }).then(() => {
     // 同时备份到 Formspree
-    fetch('https://formspree.io/f/xaqgyqko',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,phone,school,score,rank,ref:currentRef,source:'解锁报告'})}).catch(()=>{});
+    fetch(FORMSPREE_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,phone,school,score,rank,ref:currentRef,source:'解锁报告'})}).catch(()=>{});
     window.zkUnlocked = true;
     const s06 = document.getElementById('s06');
     if (s06 && APP_DATA) { s06.innerHTML = renderScreen('s06', APP_DATA); setTimeout(renderSubjectInputs, 200); }
@@ -1482,16 +1486,21 @@ function submitSubjects() {
     if (resultEl) resultEl.innerHTML = '<div style="color:#999;text-align:center;padding:8px;">请至少输入一科成绩</div>';
     return;
   }
+  data.type = 'lead';
   data.ref = currentRef;
   data.source = '各科成绩';
-  fetch('https://script.google.com/macros/s/AKfycbx5sVr_xr1xYNcooxCfuadqD3LhvVuTarz_cYZERmSWASCrP_ESb33Zl2n_8NaBgcs/exec', {
+  data.visitorId = getVisitorId();
+  data.sessionId = getSessionId();
+  data.lastPage = SCREEN_NAMES[currentScreen] || '分析结果';
+  trackEvent('submit_subjects', { subjectCount: Object.keys(data).filter(k => k.indexOf('subj_') === 0).length });
+  fetch(GOOGLE_SCRIPT_URL, {
     method: 'POST',
     body: JSON.stringify(data)
   }).then(() => {
-    fetch('https://formspree.io/f/xaqgyqko',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).catch(()=>{});
+    fetch(FORMSPREE_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).catch(()=>{});
     if (resultEl) resultEl.innerHTML = '<div style="color:#059669;text-align:center;padding:12px;background:#ECFDF5;border-radius:8px;font-size:13px;">✅ 成绩已提交，专属老师将根据各科情况为你制定提升方案</div>';
   }).catch(() => {
-    fetch('https://formspree.io/f/xaqgyqko',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).catch(()=>{});
+    fetch(FORMSPREE_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).catch(()=>{});
     if (resultEl) resultEl.innerHTML = '<div style="color:#059669;text-align:center;padding:12px;background:#ECFDF5;border-radius:8px;font-size:13px;">✅ 成绩已提交，专属老师将根据各科情况为你制定提升方案</div>';
   });
 }
@@ -1508,15 +1517,16 @@ function submitContact() {
   if (!phone || phone.length < 11) { status.textContent = '请输入正确的手机号'; status.style.color = 'var(--danger)'; return; }
   status.textContent = '提交中...';
   status.style.color = '#666';
-  fetch('https://script.google.com/macros/s/AKfycbx5sVr_xr1xYNcooxCfuadqD3LhvVuTarz_cYZERmSWASCrP_ESb33Zl2n_8NaBgcs/exec', {
+  trackEvent('submit_phone', { from: '我的页', score, rank, hasSchool: !!school });
+  fetch(GOOGLE_SCRIPT_URL, {
     method: 'POST',
-    body: JSON.stringify({ name, phone, school, score, rank, ref: currentRef, source: '我的页' })
+    body: JSON.stringify({ type:'lead', name, phone, school, score, rank, ref: currentRef, source: '我的页', visitorId: getVisitorId(), sessionId: getSessionId(), lastPage: SCREEN_NAMES[currentScreen] || '留资页' })
   }).then(() => {
-    fetch('https://formspree.io/f/xaqgyqko',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,phone,school,score,rank,ref:currentRef,source:'我的页'})}).catch(()=>{});
+    fetch(FORMSPREE_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,phone,school,score,rank,ref:currentRef,source:'我的页'})}).catch(()=>{});
     status.innerHTML = '✅ 已提交！专属咨询老师将电话联系你';
     status.style.color = 'var(--success)';
   }).catch(() => {
-    fetch('https://formspree.io/f/xaqgyqko',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,phone,school,score,rank,ref:currentRef,source:'我的页'})}).catch(()=>{});
+    fetch(FORMSPREE_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,phone,school,score,rank,ref:currentRef,source:'我的页'})}).catch(()=>{});
     status.innerHTML = '✅ 已提交！专属咨询老师将电话联系你';
     status.style.color = 'var(--success)';
   });
@@ -1604,10 +1614,75 @@ function initApp() {
 // ===== 全局变量 =====
 const YOUR_PHONE = '';
 const YOUR_ORG = '文杰教育';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx5sVr_xr1xYNcooxCfuadqD3LhvVuTarz_cYZERmSWASCrP_ESb33Zl2n_8NaBgcs/exec';
+const FORMSPREE_URL = 'https://formspree.io/f/xaqgyqko';
 let currentRef = ''; // 渠道追踪：从URL参数读取
 let currentScreen = 0;
 let transitioning = false;
+let pageEnterAt = Date.now();
+let sessionStartAt = Date.now();
+let lastTrackedScreen = '首页';
 const SCREENS = ['s01','s02','s03','s04','s05','s06','s07','s08','s09'];
+const SCREEN_NAMES = ['首页','成绩输入','占位页','占位页','正在分析','分析结果','院校详情','查学校','留资页'];
+
+function getVisitorId() {
+  let id = localStorage.getItem('zk_visitor_id');
+  if (!id) {
+    id = 'v_' + Date.now() + '_' + Math.random().toString(36).slice(2, 10);
+    localStorage.setItem('zk_visitor_id', id);
+  }
+  return id;
+}
+
+function getSessionId() {
+  let id = sessionStorage.getItem('zk_session_id');
+  if (!id) {
+    id = 's_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+    sessionStorage.setItem('zk_session_id', id);
+  }
+  return id;
+}
+
+function baseTrackPayload(eventName, extra) {
+  return Object.assign({
+    type: 'event',
+    event: eventName,
+    ref: currentRef || localStorage.getItem('zk_channel') || '',
+    visitorId: getVisitorId(),
+    sessionId: getSessionId(),
+    page: SCREEN_NAMES[currentScreen] || '未知页面',
+    lastPage: lastTrackedScreen || SCREEN_NAMES[currentScreen] || '未知页面',
+    url: location.href,
+    ua: navigator.userAgent,
+    ts: new Date().toISOString(),
+    enterAt: new Date(pageEnterAt).toISOString(),
+    staySeconds: Math.max(0, Math.round((Date.now() - pageEnterAt) / 1000))
+  }, extra || {});
+}
+
+function trackEvent(eventName, extra) {
+  try {
+    const payload = baseTrackPayload(eventName, extra);
+    fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) }).catch(()=>{});
+  } catch(e) {}
+}
+
+function trackLeave() {
+  try {
+    const payload = baseTrackPayload('leave_page', {
+      exitAt: new Date().toISOString(),
+      totalStaySeconds: Math.max(0, Math.round((Date.now() - sessionStartAt) / 1000))
+    });
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon(GOOGLE_SCRIPT_URL, JSON.stringify(payload));
+    } else {
+      fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload), keepalive: true }).catch(()=>{});
+    }
+  } catch(e) {}
+}
+
+window.addEventListener('beforeunload', trackLeave);
+window.addEventListener('pagehide', trackLeave);
 
 // ===== Screen Navigation =====
 function navigateTo(targetIdx) {
@@ -1636,7 +1711,10 @@ function navigateTo(targetIdx) {
   setTimeout(() => {
     currentEl.classList.remove('exit-left', 'exit-right');
     targetEl.style.transform = '';
+    lastTrackedScreen = SCREEN_NAMES[targetIdx] || '未知页面';
+    pageEnterAt = Date.now();
     currentScreen = targetIdx;
+    trackEvent('screen_view', { screen: SCREEN_NAMES[targetIdx] || String(targetIdx) });
     updateTabBar(targetIdx);
     transitioning = false;
 
@@ -1789,6 +1867,8 @@ async function startGenerating() {
   const rankEl  = document.getElementById('rank');
   const score   = scoreEl ? parseInt(scoreEl.value) || 650 : 650;
   const rank    = rankEl  ? parseInt(rankEl.value) || 0 : 0;
+  trackEvent('click_start', { from: 'score_page', score, rank });
+  trackEvent('submit_score', { score, rank });
 
   // 2. 保存分数到本地
     localStorage.setItem('zk_last_score', String(score));
@@ -1923,6 +2003,7 @@ function playAnimCycle2(matchPromise) {
             }
         }
       }
+      trackEvent('generate_result', { score: window.zkLastScore || '', rank: window.zkLastRank || '' });
       navigateTo(5);
     } else {
       playAnimCycle2(matchPromise);
